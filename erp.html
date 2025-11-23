@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام ERP - دوت نت</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* متغيرات الألوان */
+        :root {
+            --primary: #c00a27;
+            --primary-dark: #8a001a;
+            --primary-light: #ff4d6d;
+            --secondary: #000000;
+            --secondary-light: #1a1a1a;
+            --accent: #ff3b30;
+            --light: #f5f5f5;
+            --text: #333333;
+            --text-light: #666666;
+            --gold: #ffd700;
+            --silver: #c0c0c0;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --radius: 12px;
+        }
+
+        /* إعادة تعيين الأنماط الأساسية */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            color: var(--light);
+            line-height: 1.7;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* التنسيق العام */
+        .container {
+            width: 90%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+        }
+
+        h1, h2, h3, h4 {
+            margin-bottom: 20px;
+            color: var(--light);
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 14px 30px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(192, 10, 39, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(192, 10, 39, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-large {
+            padding: 18px 40px;
+            font-size: 18px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 70px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 42px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 15px;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--gold));
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            border-radius: 2px;
+        }
+
+        /* الشريط العلوي */
+        header {
+            background-color: rgba(0, 0, 0, 0.9);
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 26px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 28px;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+            position: relative;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--light);
+            font-weight: 600;
+            transition: var(--transition);
+            padding: 8px 0;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            background: var(--primary);
+            bottom: 0;
+            right: 0;
+            transition: var(--transition);
+            border-radius: 3px;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        /* قسم الهيرو لـ ERP */
+        .erp-hero {
+            background: linear-gradient(135deg, rgba(12, 12, 12, 0.9) 0%, rgba(26, 26, 26, 0.9) 100%), url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 180px 0 120px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .erp-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23c00a27" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+
+        .erp-hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .erp-hero h1 {
+            font-size: 58px;
+            margin-bottom: 25px;
+            color: white;
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .erp-hero p {
+            font-size: 22px;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* قسم وحدات ERP */
+        .erp-modules {
+            padding: 100px 0;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .module-card {
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.9) 0%, rgba(50, 50, 50, 0.9) 100%);
+            border-radius: var(--radius);
+            padding: 40px 30px;
+            text-align: center;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .module-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(192, 10, 39, 0.05) 0%, rgba(0, 0, 0, 0.05) 100%);
+            z-index: 0;
+        }
+
+        .module-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .module-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+            font-size: 40px;
+            color: white;
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+        }
+
+        .module-card:hover .module-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .module-card h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .module-card p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+            flex-grow: 1;
+        }
+
+        .module-features {
+            list-style: none;
+            margin-bottom: 30px;
+            text-align: right;
+            position: relative;
+            z-index: 1;
+        }
+
+        .module-features li {
+            margin-bottom: 10px;
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .module-features li i {
+            color: var(--primary);
+        }
+
+        /* قسم لوحة التحكم */
+        .erp-dashboard {
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(40, 40, 40, 0.9) 100%);
+            padding: 80px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .dashboard-card {
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.9) 0%, rgba(50, 50, 50, 0.9) 100%);
+            border-radius: var(--radius);
+            padding: 30px;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(192, 10, 39, 0.05) 0%, rgba(0, 0, 0, 0.05) 100%);
+            z-index: 0;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .dashboard-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 30px;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dashboard-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .dashboard-card h4 {
+            color: white;
+            margin-bottom: 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* قسم التقارير والتحليلات */
+        .erp-reports {
+            padding: 80px 0;
+        }
+
+        .reports-container {
+            display: flex;
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .reports-sidebar {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.9) 0%, rgba(50, 50, 50, 0.9) 100%);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .reports-sidebar h3 {
+            color: white;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .report-categories {
+            list-style: none;
+        }
+
+        .report-categories li {
+            margin-bottom: 15px;
+        }
+
+        .report-categories a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: var(--radius);
+        }
+
+        .report-categories a:hover,
+        .report-categories a.active {
+            color: var(--primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .reports-content {
+            flex: 2;
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.9) 0%, rgba(50, 50, 50, 0.9) 100%);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .reports-content h3 {
+            color: white;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .report-chart {
+            height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .report-table th,
+        .report-table td {
+            padding: 15px;
+            text-align: right;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .report-table th {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .report-table tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* قسم المميزات */
+        .erp-features {
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(40, 40, 40, 0.9) 100%);
+            padding: 80px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.9) 0%, rgba(50, 50, 50, 0.9) 100%);
+            border-radius: var(--radius);
+            padding: 30px;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .feature-content h4 {
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .feature-content p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0;
+        }
+
+        /* تأثيرات التمرير */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* الفوتر */
+        footer {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            color: white;
+            padding: 60px 0 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .footer-column {
+            width: 23%;
+            margin-bottom: 30px;
+        }
+
+        .footer-column h3 {
+            color: white;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary);
+            bottom: 0;
+            right: 0;
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-right: 8px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* التجاوب مع الشاشات المختلفة */
+        @media (max-width: 1200px) {
+            .footer-column {
+                width: 48%;
+            }
+            
+            .reports-container {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .erp-hero h1 {
+                font-size: 46px;
+            }
+            
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                width: 100%;
+                display: none;
+                margin-top: 20px;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li {
+                margin: 10px 0;
+            }
+            
+            .hamburger {
+                display: block;
+                position: absolute;
+                top: 25px;
+                left: 20px;
+            }
+            
+            .erp-hero {
+                padding: 150px 0 80px;
+            }
+            
+            .erp-hero h1 {
+                font-size: 36px;
+            }
+            
+            .erp-hero p {
+                font-size: 18px;
+            }
+            
+            .footer-column {
+                width: 100%;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* تأثيرات ثلاثية الأبعاد */
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .pulse-glow {
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 5px rgba(192, 10, 39, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(192, 10, 39, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(192, 10, 39, 0.5); }
+        }
+
+        /* تأثيرات ثلاثية الأبعاد للبطاقات */
+        .module-card {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .module-card:hover {
+            transform: translateY(-15px) rotateX(5deg);
+        }
+    </style>
+</head>
+<body>
+    <!-- الشريط العلوي -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <i class="fas fa-network-wired"></i>
+                    دوت نت
+                </a>
+                <div class="hamburger">☰</div>
+                <ul class="nav-links">
+                    <li><a href="#" class="active">نظام ERP</a></li>
+                    <li><a href="#">الخدمات</a></li>
+                    <li><a href="#">العروض الحصرية</a></li>
+                    <li><a href="#">اتصل بنا</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- قسم الهيرو لـ ERP -->
+    <section class="erp-hero">
+        <div class="container">
+            <div class="erp-hero-content">
+                <h1>نظام إدارة المؤسسات المتكامل (ERP)</h1>
+                <p>إدارة جميع جوانب عملك في نظام واحد متكامل. زيادة الكفاءة، تقليل التكاليف، وتحسين اتخاذ القرارات.</p>
+                <a href="#modules" class="btn btn-large pulse-glow">
+                    <i class="fas fa-cogs"></i> استكشف الوحدات
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم وحدات ERP -->
+    <section class="erp-modules" id="modules">
+        <div class="container">
+            <div class="section-title">
+                <h2>وحدات نظام ERP</h2>
+                <p>اكتشف مجموعة الوحدات المتكاملة التي تغطي جميع جوانب إدارة مؤسستك</p>
+            </div>
+            
+            <div class="modules-grid">
+                <!-- وحدة 1 -->
+                <div class="module-card fade-in">
+                    <div class="module-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>المحاسبة والمالية</h3>
+                    <p>إدارة كافة العمليات المالية والمحاسبية بدقة وسهولة مع تقارير مالية مفصلة.</p>
+                    
+                    <ul class="module-features">
+                        <li><i class="fas fa-check"></i> إدارة الحسابات العامة</li>
+                        <li><i class="fas fa-check"></i> إدارة المصروفات والإيرادات</li>
+                        <li><i class="fas fa-check"></i> تقارير مالية متقدمة</li>
+                        <li><i class="fas fa-check"></i> إدارة الضرائب والالتزامات</li>
+                    </ul>
+                    
+                    <a href="#" class="btn">
+                        <i class="fas fa-info-circle"></i> تفاصيل الوحدة
+                    </a>
+                </div>
+                
+                <!-- وحدة 2 -->
+                <div class="module-card fade-in">
+                    <div class="module-icon">
+                        <i class="fas fa-warehouse"></i>
+                    </div>
+                    <h3>إدارة المخزون</h3>
+                    <p>تتبع وإدارة المخزون في الوقت الفعلي مع تحليلات متقدمة وتنبؤات بالطلب.</p>
+                    
+                    <ul class="module-features">
+                        <li><i class="fas fa-check"></i> تتبع المخزون في الوقت الفعلي</li>
+                        <li><i class="fas fa-check"></i> إدارة أوامر الشراء والمبيعات</li>
+                        <li><i class="fas fa-check"></i> تنبؤات بالطلب والمخزون</li>
+                        <li><i class="fas fa-check"></i> إدارة المستودعات والمخازن</li>
+                    </ul>
+                    
+                    <a href="#" class="btn">
+                        <i class="fas fa-info-circle"></i> تفاصيل الوحدة
+                    </a>
+                </div>
+                
+                <!-- وحدة 3 -->
+                <div class="module-card fade-in">
+                    <div class="module-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>الموارد البشرية</h3>
+                    <p>إدارة شؤون الموظفين والرواتب والحضور والانصراف بكل كفاءة وسهولة.</p>
+                    
+                    <ul class="module-features">
+                        <li><i class="fas fa-check"></i> إدارة بيانات الموظفين</li>
+                        <li><i class="fas fa-check"></i> إدارة الرواتب والمزايا</li>
+                        <li><i class="fas fa-check"></i> تتبع الحضور والانصراف</li>
+                        <li><i class="fas fa-check"></i> إدارة التقييمات والترقيات</li>
+                    </ul>
+                    
+                    <a href="#" class="btn">
+                        <i class="fas fa-info-circle"></i> تفاصيل الوحدة
+                    </a>
+                </div>
+                
+                <!-- وحدة 4 -->
+                <div class="module-card fade-in">
+                    <div class="module-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3>المبيعات والتسويق</h3>
+                    <p>إدارة دورة المبيعات كاملة من الفرص إلى الفواتير مع تحليلات أداء المبيعات.</p>
+                    
+                    <ul class="module-features">
+                        <li><i class="fas fa-check"></i> إدارة علاقات العملاء (CRM)</li>
+                        <li><i class="fas fa-check"></i> تتبع فرص المبيعات</li>
+                        <li><i class="fas fa-check"></i> إدارة الفواتير والمستحقات</li>
+                        <li><i class="fas fa-check"></i> تحليلات أداء المبيعات</li>
+                    </ul>
+                    
+                    <a href="#" class="btn">
+                        <i class="fas fa-info-circle"></i> تفاصيل الوحدة
+                    </a>
+                </div>
+                
+                <!-- وحدة 5 -->
+                <div class="module-card fade-in">
+                    <div class="module-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <h3>إدارة المشاريع</h3>
+                    <p>تخطيط ومتابعة وتنفيذ المشاريع بكفاءة وفعالية مع تخصيص الموارد والميزانيات.</p>
+                    
+                    <ul class="module-features">
+                        <li><i class="fas fa-check"></i> تخطيط المشاريع والمهام</li>
+                        <li><i class="fas fa-check"></i> تخصيص الموارد والميزانيات</li>
+                        <li><i class="fas fa-check"></i> متابعة تقدم المشاريع</li>
+                        <li><i class="fas fa-check"></i> تحليل تكاليف المشاريع</li>
+                    </ul>
+                    
+                    <a href="#" class="btn">
+                        <i class="fas fa-info-circle"></i> تفاصيل الوحدة
+                    </a>
+                </div>
+                
+                <!-- وحدة 6 -->
+                <div class="module-card fade-in">
+                    <div class="module-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>التصنيع والإنتاج</h3>
+                    <p>إدارة عمليات التصنيع وتخطيط الإنتاج والجودة مع تحسين سير العمل.</p>
+                    
+                    <ul class="module-features">
+                        <li><i class="fas fa-check"></i> تخطيط الإنتاج والموارد</li>
+                        <li><i class="fas fa-check"></i> إدارة جودة التصنيع</li>
+                        <li><i class="fas fa-check"></i> تحسين سير العمل</li>
+                        <li><i class="fas fa-check"></i> إدارة الصيانة والإصلاح</li>
+                    </ul>
+                    
+                    <a href="#" class="btn">
+                        <i class="fas fa-info-circle"></i> تفاصيل الوحدة
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم لوحة التحكم -->
+    <section class="erp-dashboard">
+        <div class="container">
+            <div class="section-title">
+                <h2>لوحة التحكم</h2>
+                <p>نظرة شاملة على أداء مؤسستك في لمحة واحدة</p>
+            </div>
+            
+            <div class="dashboard-grid">
+                <div class="dashboard-card fade-in">
+                    <div class="dashboard-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="dashboard-value">2.5M</div>
+                    <h4>الإيرادات الشهرية</h4>
+                </div>
+                
+                <div class="dashboard-card fade-in">
+                    <div class="dashboard-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="dashboard-value">1,247</div>
+                    <h4>الطلبات الجديدة</h4>
+                </div>
+                
+                <div class="dashboard-card fade-in">
+                    <div class="dashboard-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="dashboard-value">356</div>
+                    <h4>العملاء النشطين</h4>
+                </div>
+                
+                <div class="dashboard-card fade-in">
+                    <div class="dashboard-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="dashboard-value">87%</div>
+                    <h4>معدل الإنجاز</h4>
+                </div>
+                
+                <div class="dashboard-card fade-in">
+                    <div class="dashboard-icon">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <div class="dashboard-value">4,892</div>
+                    <h4>المنتجات في المخزون</h4>
+                </div>
+                
+                <div class="dashboard-card fade-in">
+                    <div class="dashboard-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="dashboard-value">98%</div>
+                    <h4>معدل التسليم في الوقت</h4>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم التقارير والتحليلات -->
+    <section class="erp-reports">
+        <div class="container">
+            <div class="section-title">
+                <h2>التقارير والتحليلات</h2>
+                <p>تحليلات متقدمة وتقارير شاملة لاتخاذ قرارات مستنيرة</p>
+            </div>
+            
+            <div class="reports-container">
+                <div class="reports-sidebar fade-in">
+                    <h3>أنواع التقارير</h3>
+                    <ul class="report-categories">
+                        <li><a href="#" class="active"><i class="fas fa-chart-bar"></i> تقارير المبيعات</a></li>
+                        <li><a href="#"><i class="fas fa-money-bill"></i> تقارير مالية</a></li>
+                        <li><a href="#"><i class="fas fa-users"></i> تقارير الموارد البشرية</a></li>
+                        <li><a href="#"><i class="fas fa-warehouse"></i> تقارير المخزون</a></li>
+                        <li><a href="#"><i class="fas fa-project-diagram"></i> تقارير المشاريع</a></li>
+                        <li><a href="#"><i class="fas fa-cogs"></i> تقارير التصنيع</a></li>
+                        <li><a href="#"><i class="fas fa-tachometer-alt"></i> تقارير الأداء</a></li>
+                    </ul>
+                </div>
+                
+                <div class="reports-content fade-in">
+                    <h3>تقرير أداء المبيعات - الربع الأخير</h3>
+                    
+                    <div class="report-chart">
+                        <i class="fas fa-chart-line" style="font-size: 60px; margin-bottom: 15px;"></i>
+                        <p>رسم بياني لأداء المبيعات خلال الربع الأخير</p>
+                    </div>
+                    
+                    <table class="report-table">
+                        <thead>
+                            <tr>
+                                <th>الشهر</th>
+                                <th>المبيعات</th>
+                                <th>النمو</th>
+                                <th>العملاء الجدد</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>يناير</td>
+                                <td>750,000 ريال</td>
+                                <td style="color: var(--success);">+12%</td>
+                                <td>45</td>
+                            </tr>
+                            <tr>
+                                <td>فبراير</td>
+                                <td>820,000 ريال</td>
+                                <td style="color: var(--success);">+9%</td>
+                                <td>38</td>
+                            </tr>
+                            <tr>
+                                <td>مارس</td>
+                                <td>950,000 ريال</td>
+                                <td style="color: var(--success);">+16%</td>
+                                <td>52</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم المميزات -->
+    <section class="erp-features">
+        <div class="container">
+            <div class="section-title">
+                <h2>مميزات نظام ERP</h2>
+                <p>اكتشف المزايا التي تجعل نظامنا الخيار الأمثل لمؤسستك</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-sync"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>التكامل الكامل</h4>
+                        <p>جميع الوحدات متكاملة مع بعضها البعض، مما يضمن تدفق البيانات بسلاسة بين الأقسام.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>متوافق مع الجوال</h4>
+                        <p>يمكنك الوصول إلى النظام من أي جهاز وفي أي وقت، مما يوفر المرونة في العمل.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>أمن متقدم</h4>
+                        <p>نظام أمني متعدد الطبقات يحمي بياناتك الحساسة من أي تهديدات محتملة.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>أداء عالي</h4>
+                        <p>مصمم ليعمل بسرعة وكفاءة حتى مع الأحمال العالية والبيانات الضخمة.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>قابل للتخصيص</h4>
+                        <p>يمكن تخصيص النظام ليناسب احتياجات مؤسستك الفريدة ومتطلباتها الخاصة.</p>
+                    </div>
+                </div>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div class="feature-content">
+                        <h4>دعم فني مستمر</h4>
+                        <p>فريق دعم فني متخصص متاح على مدار الساعة لمساعدتك في أي وقت تحتاجه.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- الفوتر -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>دوت نت</h3>
+                    <p>شريكك الموثوق في رحلتك الرقمية. نقدم حلولاً تقنية مبتكرة تساعد عملك على النمو والازدهار.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> نظام ERP</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> الخدمات</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> العروض الحصرية</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> اتصل بنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>وحدات ERP</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> المحاسبة والمالية</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> إدارة المخزون</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> الموارد البشرية</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> المبيعات والتسويق</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>اتصل بنا</h3>
+                    <ul class="footer-links">
+                        <li><a href="tel:01123456789"><i class="fas fa-phone"></i> 01123456789</a></li>
+                        <li><a href="mailto:info@dotnet.com"><i class="fas fa-envelope"></i> info@dotnet.com</a></li>
+                        <li><a href="#"><i class="fas fa-map-marker-alt"></i> الرياض، المملكة العربية السعودية</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>جميع الحقوق محفوظة &copy; 2023 دوت نت</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // قائمة التنقل للموبايل
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // تأثير التمرير للعناصر
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const fadeInOnScroll = () => {
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        };
+        
+        window.addEventListener('scroll', fadeInOnScroll);
+        window.addEventListener('load', fadeInOnScroll);
+        
+        // تغيير لون الشريط العلوي عند التمرير
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+                header.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.2)';
+            } else {
+                header.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+                header.style.boxShadow = 'var(--shadow)';
+            }
+        });
+
+        // اختيار نوع التقرير
+        document.querySelectorAll('.report-categories a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                document.querySelectorAll('.report-categories a').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                link.classList.add('active');
+                
+                // هنا يمكن إضافة منطق تحميل التقرير المناسب
+                const reportType = link.textContent;
+                alert(`سيتم تحميل: ${reportType}`);
+            });
+        });
+
+        // تأثيرات الأرقام المتزايدة للوحة التحكم
+        function animateDashboard() {
+            const dashboardValues = document.querySelectorAll('.dashboard-value');
+            dashboardValues.forEach(value => {
+                const target = parseInt(value.textContent);
+                let current = 0;
+                const increment = target / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    value.textContent = Math.floor(current) + (value.textContent.includes('%') ? '%' : '');
+                }, 30);
+            });
+        }
+
+        // تشغيل تأثير الأرقام عند ظهور قسم لوحة التحكم
+        const dashboardSection = document.querySelector('.erp-dashboard');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateDashboard();
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        observer.observe(dashboardSection);
+    </script>
+</body>
+</html>
