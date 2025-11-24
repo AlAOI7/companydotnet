@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>طلب الخدمات - دوت نت</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* مسافة بين الصورة والنص */
+    text-decoration: none;
+}
+
+.logo-img {
+    width: 40px;     /* حجم الصورة داخل النافبار */
+    height: 40px;    /* نفس الارتفاع للمحافظة على التناسق */
+    object-fit: cover;
+    border-radius: 50%; /* جعل الصورة دائرية (اختياري) */
+}
+
+.logo i {
+    font-size: 20px;
+    color: #fff; /* لون الأيقونة */
+}
+
+.logo span {
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff; /* نص دوت نت */
+}
+
+        /* متغيرات الألوان */
+        :root {
+            --primary: #c00a27;
+            --primary-dark: #8a001a;
+            --primary-light: #ff4d6d;
+            --secondary: #000000;
+            --secondary-light: #1a1a1a;
+            --accent: #ff3b30;
+            --light: #f5f5f5;
+            --text: #333333;
+            --text-light: #666666;
+            --gold: #ffd700;
+            --silver: #c0c0c0;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --radius: 12px;
+        }
+
+        /* إعادة تعيين الأنماط الأساسية */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            color: var(--light);
+            line-height: 1.7;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* التنسيق العام */
+        .container {
+            width: 90%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            margin-bottom: 20px;
+            color: var(--light);
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 14px 30px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(192, 10, 39, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(192, 10, 39, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-large {
+            padding: 18px 40px;
+            font-size: 18px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 70px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 42px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 15px;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--gold));
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            border-radius: 2px;
+        }
+
+        /* الشريط العلوي */
+        header {
+            background-color: rgba(0, 0, 0, 0.9);
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 26px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 28px;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+            position: relative;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--light);
+            font-weight: 600;
+            transition: var(--transition);
+            padding: 8px 0;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            background: var(--primary);
+            bottom: 0;
+            right: 0;
+            transition: var(--transition);
+            border-radius: 3px;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        /* قسم طلب الخدمات */
+        .request-section {
+            padding: 150px 0 80px;
+            background: linear-gradient(135deg, rgba(12, 12, 12, 0.95) 0%, rgba(26, 26, 26, 0.95) 100%);
+            min-height: 100vh;
+        }
+
+        .request-container {
+            display: flex;
+            gap: 60px;
+            align-items: flex-start;
+        }
+
+        .request-info {
+            flex: 1;
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.9) 0%, rgba(50, 50, 50, 0.9) 100%);
+            border-radius: var(--radius);
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 120px;
+        }
+
+        .request-form-container {
+            flex: 2;
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.9) 0%, rgba(50, 50, 50, 0.9) 100%);
+            border-radius: var(--radius);
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: var(--shadow);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .info-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .info-content h4 {
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .info-content p {
+            margin-bottom: 0;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .form-header h2 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .form-header p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--light);
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            color: #000000;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(192, 10, 39, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper::after {
+            content: '\f078';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 50%;
+            left: 15px;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+            pointer-events: none;
+        }
+
+        select.form-control {
+            appearance: none;
+            padding-left: 40px;
+        }
+
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed rgba(255, 255, 255, 0.3);
+            border-radius: var(--radius);
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+        }
+
+        .file-upload-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
+        }
+
+        .file-upload-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .submit-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 18px;
+            font-size: 18px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border: none;
+            border-radius: var(--radius);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(192, 10, 39, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .form-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 0;
+            left: 0;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            transition: var(--transition);
+        }
+
+        .step.active .step-number {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            box-shadow: 0 0 10px rgba(192, 10, 39, 0.5);
+        }
+
+        .step.completed .step-number {
+            background: var(--success);
+        }
+
+        .step.completed .step-number::after {
+            content: '\f00c';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+        }
+
+        .step-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .step.active .step-label {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn-prev, .btn-next {
+            padding: 12px 30px;
+        }
+
+        .btn-prev {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--light);
+        }
+
+        .btn-prev:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .confirmation-message {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+
+        .confirmation-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            color: white;
+            margin: 0 auto 20px;
+        }
+
+        .confirmation-message h3 {
+            color: var(--success);
+            margin-bottom: 15px;
+        }
+
+        .confirmation-message p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+        }
+
+        /* تأثيرات الحركة */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(192, 10, 39, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(192, 10, 39, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(192, 10, 39, 0);
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* التجاوب مع الشاشات المختلفة */
+        @media (max-width: 1200px) {
+            .request-container {
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .request-container {
+                flex-direction: column;
+            }
+            
+            .request-info {
+                position: static;
+                margin-bottom: 40px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                width: 100%;
+                display: none;
+                margin-top: 20px;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li {
+                margin: 10px 0;
+                margin-left: 0;
+            }
+            
+            .hamburger {
+                display: block;
+                position: absolute;
+                top: 20px;
+                left: 20px;
+            }
+            
+            .request-section {
+                padding: 130px 0 60px;
+            }
+            
+            .request-info, .request-form-container {
+                padding: 30px 20px;
+            }
+            
+            .section-title h2 {
+                font-size: 32px;
+            }
+            
+            .step-indicator {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+            
+            .step {
+                flex: 1;
+                min-width: 80px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .request-section {
+                padding: 120px 0 40px;
+            }
+            
+            .request-info, .request-form-container {
+                padding: 25px 15px;
+            }
+            
+            .section-title h2 {
+                font-size: 28px;
+            }
+            
+            .info-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .info-icon {
+                margin: 0 auto 10px;
+            }
+            
+            .form-navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn-prev, .btn-next {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- الشريط العلوي -->
+     <!-- الشريط العلوي -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                     <a href="#" class="logo">
+                        <img src="1.jpg" alt="فريق دوت نت" class="logo-img">
+                        <!-- <i class="fas fa-network-wired"></i> -->
+                        <span>دوت نت</span>
+                    </a>
+
+                <div class="hamburger">☰</div>
+                <ul class="nav-links">
+                    <li><a href="index.html" class="active">الرئيسية</a></li>
+                    <li><a href="offers.html">الإعلانات</a></li>
+                    <li><a href="serves.html">الخدمات</a></li>
+                    <li><a href="blog.html">المدونه</a></li>
+                    <li><a href="about.html">من نحن</a></li>
+                    <li><a href="erp.html">نظام ERP</a></li>
+                    <li><a href="Service-request.html">طلب خدمة</a></li>
+                    <li><a href="contact.html">اتصل بنا</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- قسم طلب الخدمات -->
+    <section class="request-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>طلب الخدمات</h2>
+                <p>املأ النموذج أدناه وسنتواصل معك في أقرب وقت ممكن</p>
+            </div>
+            
+            <div class="request-container">
+                <div class="request-info">
+                    <h3>معلومات التواصل</h3>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="info-content">
+                            <h4>اتصل بنا</h4>
+                            <p>01123456789</p>
+                            <p>الخط الساخن: 920000000</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="info-content">
+                            <h4>البريد الإلكتروني</h4>
+                            <p>info@dotnet.com</p>
+                            <p>support@dotnet.com</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="info-content">
+                            <h4>العنوان</h4>
+                            <p>الرياض، المملكة العربية السعودية</p>
+                            <p>شارع الملك فهد، برج دوت نت</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="info-content">
+                            <h4>ساعات العمل</h4>
+                            <p>الأحد - الخميس: 8 ص - 5 م</p>
+                            <p>الجمعة - السبت: مغلق</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="request-form-container">
+                    <div class="form-header">
+                        <h2>طلب خدمة جديدة</h2>
+                        <p>اختر الخدمة التي تحتاجها واملأ البيانات المطلوبة</p>
+                    </div>
+                    
+                    <div class="step-indicator">
+                        <div class="step active" data-step="1">
+                            <div class="step-number">1</div>
+                            <div class="step-label">معلومات أساسية</div>
+                        </div>
+                        <div class="step" data-step="2">
+                            <div class="step-number">2</div>
+                            <div class="step-label">تفاصيل الخدمة</div>
+                        </div>
+                        <div class="step" data-step="3">
+                            <div class="step-number">3</div>
+                            <div class="step-label">التأكيد</div>
+                        </div>
+                    </div>
+                    
+                    <form id="serviceRequestForm">
+                        <!-- الخطوة 1: المعلومات الأساسية -->
+                        <div class="form-step active" id="step-1">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="fullName">الاسم الكامل *</label>
+                                    <input type="text" id="fullName" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="company">اسم الشركة</label>
+                                    <input type="text" id="company" class="form-control">
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email">البريد الإلكتروني *</label>
+                                    <input type="email" id="email" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">رقم الهاتف *</label>
+                                    <input type="tel" id="phone" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="country">البلد</label>
+                                <div class="select-wrapper">
+                                    <select id="country" class="form-control">
+                                        <option value="">اختر البلد</option>
+                                        <option value="SA">المملكة العربية السعودية</option>
+                                        <option value="AE">الإمارات العربية المتحدة</option>
+                                        <option value="KW">الكويت</option>
+                                        <option value="QA">قطر</option>
+                                        <option value="BH">البحرين</option>
+                                        <option value="OM">عمان</option>
+                                        <option value="other">دولة أخرى</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-navigation">
+                                <button type="button" class="btn btn-prev" disabled>
+                                    <i class="fas fa-arrow-right"></i> السابق
+                                </button>
+                                <button type="button" class="btn btn-next" data-next="2">
+                                    التالي <i class="fas fa-arrow-left"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- الخطوة 2: تفاصيل الخدمة -->
+                        <div class="form-step" id="step-2">
+                            <div class="form-group">
+                                <label for="serviceType">نوع الخدمة المطلوبة *</label>
+                                <div class="select-wrapper">
+                                    <select id="serviceType" class="form-control" required>
+                                        <option value="">اختر نوع الخدمة</option>
+                                        <option value="web">تطوير المواقع الإلكترونية</option>
+                                        <option value="mobile">تطبيقات الجوال</option>
+                                        <option value="ecommerce">التجارة الإلكترونية</option>
+                                        <option value="marketing">التسويق الرقمي</option>
+                                        <option value="cloud">الحلول السحابية</option>
+                                        <option value="erp">أنظمة ERP</option>
+                                        <option value="consultation">استشارة تقنية</option>
+                                        <option value="other">خدمة أخرى</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="budget">الميزانية المتوقعة (اختياري)</label>
+                                <div class="select-wrapper">
+                                    <select id="budget" class="form-control">
+                                        <option value="">اختر نطاق الميزانية</option>
+                                        <option value="1-5">1,000 - 5,000 ر.س</option>
+                                        <option value="5-10">5,000 - 10,000 ر.س</option>
+                                        <option value="10-20">10,000 - 20,000 ر.س</option>
+                                        <option value="20-50">20,000 - 50,000 ر.س</option>
+                                        <option value="50+">أكثر من 50,000 ر.س</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="timeline">الجدول الزمني المطلوب</label>
+                                <div class="select-wrapper">
+                                    <select id="timeline" class="form-control">
+                                        <option value="">اختر الجدول الزمني</option>
+                                        <option value="urgent">عاجل (أقل من أسبوعين)</option>
+                                        <option value="2-4">2-4 أسابيع</option>
+                                        <option value="1-2">1-2 شهر</option>
+                                        <option value="2-4">2-4 أشهر</option>
+                                        <option value="4+">أكثر من 4 أشهر</option>
+                                        <option value="flexible">مرن</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="description">وصف المشروع أو الخدمة المطلوبة *</label>
+                                <textarea id="description" class="form-control" placeholder="اشراح بالتفصيل الخدمة التي تحتاجها..." required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>رفع ملفات (اختياري)</label>
+                                <div class="file-upload">
+                                    <div class="file-upload-btn">
+                                        <i class="fas fa-cloud-upload-alt"></i> انقر لرفع الملفات
+                                        <input type="file" class="file-upload-input" multiple>
+                                    </div>
+                                </div>
+                                <div class="file-info">يمكنك رفع ملفات مثل: مستندات، صور، عروض تقديمية (الحجم الأقصى 10MB)</div>
+                            </div>
+                            
+                            <div class="form-navigation">
+                                <button type="button" class="btn btn-prev" data-prev="1">
+                                    <i class="fas fa-arrow-right"></i> السابق
+                                </button>
+                                <button type="button" class="btn btn-next" data-next="3">
+                                    التالي <i class="fas fa-arrow-left"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- الخطوة 3: التأكيد -->
+                        <div class="form-step" id="step-3">
+                            <div class="form-group">
+                                <label for="preferredContact">طريقة التواصل المفضلة</label>
+                                <div class="select-wrapper">
+                                    <select id="preferredContact" class="form-control">
+                                        <option value="email">البريد الإلكتروني</option>
+                                        <option value="phone">الهاتف</option>
+                                        <option value="whatsapp">واتساب</option>
+                                        <option value="any">أي طريقة</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="reference">كيف سمعت عنا؟</label>
+                                <div class="select-wrapper">
+                                    <select id="reference" class="form-control">
+                                        <option value="">اختر المصدر</option>
+                                        <option value="search">محرك البحث (جوجل، بينغ)</option>
+                                        <option value="social">وسائل التواصل الاجتماعي</option>
+                                        <option value="friend">توصية من صديق</option>
+                                        <option value="ad">إعلان</option>
+                                        <option value="event">فعالية أو مؤتمر</option>
+                                        <option value="other">مصدر آخر</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input type="checkbox" id="agreeTerms" class="form-check-input" required>
+                                    <label for="agreeTerms" class="form-check-label">
+                                        أوافق على <a href="#" style="color: var(--primary);">شروط الخدمة</a> و <a href="#" style="color: var(--primary);">سياسة الخصوصية</a>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-navigation">
+                                <button type="button" class="btn btn-prev" data-prev="2">
+                                    <i class="fas fa-arrow-right"></i> السابق
+                                </button>
+                                <button type="submit" class="btn submit-btn pulse">
+                                    <i class="fas fa-paper-plane"></i> إرسال الطلب
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- رسالة التأكيد -->
+                        <div class="confirmation-message" id="confirmationMessage">
+                            <div class="confirmation-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <h3>تم إرسال طلبك بنجاح!</h3>
+                            <p>شكراً لتواصلك معنا. سنراجع طلبك وسنتصل بك في أقرب وقت ممكن.</p>
+                            <a href="index.html" class="btn">
+                                <i class="fas fa-home"></i> العودة إلى الرئيسية
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // قائمة التنقل للموبايل
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // التحكم في خطوات النموذج
+        const formSteps = document.querySelectorAll('.form-step');
+        const stepIndicators = document.querySelectorAll('.step');
+        const nextButtons = document.querySelectorAll('.btn-next');
+        const prevButtons = document.querySelectorAll('.btn-prev');
+        const form = document.getElementById('serviceRequestForm');
+        const confirmationMessage = document.getElementById('confirmationMessage');
+
+        // الانتقال إلى الخطوة التالية
+        nextButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const currentStep = document.querySelector('.form-step.active');
+                const nextStepId = button.getAttribute('data-next');
+                const nextStep = document.getElementById(`step-${nextStepId}`);
+                
+                if (validateStep(currentStep)) {
+                    currentStep.classList.remove('active');
+                    nextStep.classList.add('active');
+                    
+                    // تحديد مؤشرات الخطوات
+                    updateStepIndicators(nextStepId);
+                }
+            });
+        });
+
+        // العودة إلى الخطوة السابقة
+        prevButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const currentStep = document.querySelector('.form-step.active');
+                const prevStepId = button.getAttribute('data-prev');
+                const prevStep = document.getElementById(`step-${prevStepId}`);
+                
+                currentStep.classList.remove('active');
+                prevStep.classList.add('active');
+                
+                // تحديد مؤشرات الخطوات
+                updateStepIndicators(prevStepId);
+            });
+        });
+
+        // تحديث مؤشرات الخطوات
+        function updateStepIndicators(activeStep) {
+            stepIndicators.forEach(indicator => {
+                const stepNumber = indicator.getAttribute('data-step');
+                indicator.classList.remove('active', 'completed');
+                
+                if (stepNumber === activeStep) {
+                    indicator.classList.add('active');
+                } else if (stepNumber < activeStep) {
+                    indicator.classList.add('completed');
+                }
+            });
+        }
+
+        // التحقق من صحة البيانات في كل خطوة
+        function validateStep(step) {
+            const inputs = step.querySelectorAll('input[required], select[required], textarea[required]');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.style.borderColor = 'var(--primary)';
+                    input.style.boxShadow = '0 0 0 2px rgba(192, 10, 39, 0.2)';
+                    isValid = false;
+                } else {
+                    input.style.borderColor = '';
+                    input.style.boxShadow = '';
+                }
+            });
+            
+            return isValid;
+        }
+
+        // إرسال النموذج
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (validateStep(document.querySelector('#step-3'))) {
+                // هنا يمكن إضافة كود إرسال البيانات إلى الخادم
+                
+                // إخفاء النموذج وإظهار رسالة التأكيد
+                form.style.display = 'none';
+                confirmationMessage.style.display = 'block';
+                
+                // إرسال بيانات النموذج (محاكاة)
+                setTimeout(() => {
+                    console.log('تم إرسال البيانات بنجاح!');
+                }, 1000);
+            }
+        });
+
+        // تأثيرات عند التركيز على الحقول
+        const formControls = document.querySelectorAll('.form-control');
+        formControls.forEach(control => {
+            control.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
+            
+            control.addEventListener('blur', function() {
+                if (!this.value) {
+                    this.parentElement.classList.remove('focused');
+                }
+            });
+        });
+
+        // عرض معلومات الملفات المرفوعة
+        const fileInputs = document.querySelectorAll('.file-upload-input');
+        fileInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                const fileInfo = this.parentElement.nextElementSibling;
+                if (this.files.length > 0) {
+                    const fileNames = Array.from(this.files).map(file => file.name).join(', ');
+                    fileInfo.textContent = `تم اختيار ${this.files.length} ملف(ات): ${fileNames}`;
+                    fileInfo.style.color = 'var(--success)';
+                } else {
+                    fileInfo.textContent = 'يمكنك رفع ملفات مثل: مستندات، صور، عروض تقديمية (الحجم الأقصى 10MB)';
+                    fileInfo.style.color = 'rgba(255, 255, 255, 0.7)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

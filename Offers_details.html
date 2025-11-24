@@ -6,6 +6,33 @@
     <title>تفاصيل العرض - دوت نت</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+
+
+                .logo {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px; /* مسافة بين الصورة والنص */
+                    text-decoration: none;
+                }
+
+                .logo-img {
+                    width: 40px;     /* حجم الصورة داخل النافبار */
+                    height: 40px;    /* نفس الارتفاع للمحافظة على التناسق */
+                    object-fit: cover;
+                    border-radius: 50%; /* جعل الصورة دائرية (اختياري) */
+                }
+
+                .logo i {
+                    font-size: 20px;
+                    color: #fff; /* لون الأيقونة */
+                }
+
+                .logo span {
+                    font-size: 18px;
+                    font-weight: bold;
+                    color: #fff; /* نص دوت نت */
+                }
+
         /* متغيرات الألوان */
         :root {
             --primary: #c00a27;
@@ -808,19 +835,26 @@
 </head>
 <body>
     <!-- الشريط العلوي -->
+  <!-- الشريط العلوي -->
     <header>
         <div class="container">
             <nav class="navbar">
-                <a href="#" class="logo">
-                    <i class="fas fa-network-wired"></i>
-                    دوت نت
-                </a>
+                     <a href="#" class="logo">
+                        <img src="1.jpg" alt="فريق دوت نت" class="logo-img">
+                        <!-- <i class="fas fa-network-wired"></i> -->
+                        <span>دوت نت</span>
+                    </a>
+
                 <div class="hamburger">☰</div>
                 <ul class="nav-links">
-                    <li><a href="#" class="active">تفاصيل العرض</a></li>
-                    <li><a href="#">العروض الحصرية</a></li>
-                    <li><a href="#">الخدمات</a></li>
-                    <li><a href="#">اتصل بنا</a></li>
+                    <li><a href="index.html" class="active">الرئيسية</a></li>
+                    <li><a href="offers.html">الإعلانات</a></li>
+                    <li><a href="serves.html">الخدمات</a></li>
+                    <li><a href="blog.html">المدونه</a></li>
+                    <li><a href="about.html">من نحن</a></li>
+                    <li><a href="erp.html">نظام ERP</a></li>
+                    <li><a href="Service-request.html">طلب خدمة</a></li>
+                    <li><a href="contact.html">اتصل بنا</a></li>
                 </ul>
             </nav>
         </div>

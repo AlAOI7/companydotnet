@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المدونة - دوت نت</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* متغيرات الألوان */
+        :root {
+            --primary: #c00a27;
+            --primary-dark: #8a001a;
+            --primary-light: #ff4d6d;
+            --secondary: #000000;
+            --secondary-light: #1a1a1a;
+            --accent: #ff3b30;
+            --light: #f5f5f5;
+            --text: #333333;
+            --text-light: #666666;
+            --gold: #ffd700;
+            --silver: #c0c0c0;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --radius: 12px;
+        }
+
+        /* إعادة تعيين الأنماط الأساسية */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            color: var(--light);
+            line-height: 1.7;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* التنسيق العام */
+        .container {
+            width: 90%;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            margin-bottom: 20px;
+            color: var(--light);
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 14px 30px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(192, 10, 39, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(192, 10, 39, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-large {
+            padding: 18px 40px;
+            font-size: 18px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 70px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 42px;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 15px;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--gold));
+            bottom: 0;
+            right: 50%;
+            transform: translateX(50%);
+            border-radius: 2px;
+        }
+
+        /* الشريط العلوي */
+        header {
+            background-color: rgba(0, 0, 0, 0.9);
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 26px;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 28px;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+            position: relative;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--light);
+            font-weight: 600;
+            transition: var(--transition);
+            padding: 8px 0;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            background: var(--primary);
+            bottom: 0;
+            right: 0;
+            transition: var(--transition);
+            border-radius: 3px;
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        /* قسم الهيرو للمدونة */
+        .blog-hero {
+            background: linear-gradient(135deg, rgba(12, 12, 12, 0.9) 0%, rgba(26, 26, 26, 0.9) 100%), url('https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 180px 0 120px;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .blog-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23c00a27" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,186.7C384,213,480,235,576,213.3C672,192,768,128,864,128C960,128,1056,192,1152,192C1248,192,1344,128,1392,96L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+
+        .blog-hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .blog-hero h1 {
+            font-size: 58px;
+            margin-bottom: 25px;
+            color: white;
+            line-height: 1.2;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .blog-hero p {
+            font-size: 22px;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            color: rgba(255, 255, 255, 0.9);
+            animation: fadeInUp 1s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+
+        /* تأثيرات ثلاثية الأبعاد */
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .pulse-glow {
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 5px rgba(192, 10, 39, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(192, 10, 39, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(192, 10, 39, 0.5); }
+        }
+
+        /* تأثيرات الحركة */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes rotateCube {
+            from {
+                transform: rotateX(0) rotateY(0) rotateZ(0);
+            }
+            to {
+                transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+            }
+        }
+
+        /* تأثيرات إضافية */
+        .glow-text {
+            text-shadow: 0 0 10px rgba(192, 10, 39, 0.7);
+        }
+
+        /* تأثير الفقاعات */
+        .bubbles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.2), rgba(192, 10, 39, 0.1));
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1),
+                        0 0 20px rgba(192, 10, 39, 0.2);
+            animation: floatBubble linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes floatBubble {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) translateX(var(--bubble-x-end)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* نماذج ثلاثية الأبعاد */
+        .model-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            margin: 60px auto;
+            perspective: 1000px;
+        }
+
+        .cube {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            margin: 0 auto;
+            transform-style: preserve-3d;
+            animation: rotateCube 15s infinite linear;
+        }
+
+        .face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            opacity: 0.9;
+            box-shadow: 0 0 20px rgba(192, 10, 39, 0.5);
+        }
+
+        .front { transform: translateZ(100px); }
+        .back { transform: rotateY(180deg) translateZ(100px); }
+        .right { transform: rotateY(90deg) translateZ(100px); }
+        .left { transform: rotateY(-90deg) translateZ(100px); }
+        .top { transform: rotateX(90deg) translateZ(100px); }
+        .bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+        /* قسم المدونة */
+        .blog-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, rgba(20, 20, 20, 0.9) 0%, rgba(40, 40, 40, 0.9) 100%);
+        }
+
+        .blog-container {
+            display: flex;
+            gap: 40px;
+        }
+
+        .blog-content {
+            flex: 2;
+        }
+
+        .blog-sidebar {
+            flex: 1;
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .blog-card {
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.9) 0%, rgba(50, 50, 50, 0.9) 100%);
+            border-radius: var(--radius);
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .blog-image {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .blog-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .blog-card:hover .blog-image img {
+            transform: scale(1.1);
+        }
+
+        .blog-category {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .blog-content-card {
+            padding: 25px;
+        }
+
+        .blog-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .blog-meta i {
+            color: var(--primary);
+        }
+
+        .blog-content-card h3 {
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        .blog-content-card p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .blog-read-more {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+
+        .blog-read-more:hover {
+            gap: 12px;
+        }
+
+        /* عناصر الشريط الجانبي */
+        .sidebar-widget {
+            background: linear-gradient(135deg, rgba(30, 30, 30, 0.9) 0%, rgba(50, 50, 50, 0.9) 100%);
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-widget h3 {
+            position: relative;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .sidebar-widget h3::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 3px;
+            background: var(--primary);
+            bottom: 0;
+            right: 0;
+            border-radius: 2px;
+        }
+
+        .categories-list {
+            list-style: none;
+        }
+
+        .categories-list li {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .categories-list li:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .categories-list a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .categories-list a:hover {
+            color: var(--primary);
+            padding-right: 8px;
+        }
+
+        .categories-list span {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        .recent-posts {
+            list-style: none;
+        }
+
+        .recent-post {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .recent-post:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .recent-post-image {
+            width: 70px;
+            height: 70px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .recent-post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .recent-post-content h4 {
+            margin-bottom: 5px;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        .recent-post-content a {
+            color: var(--light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .recent-post-content a:hover {
+            color: var(--primary);
+        }
+
+        .recent-post-content span {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .tags-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .tag:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* تأثيرات التمرير */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* الفوتر */
+        footer {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-light) 100%);
+            color: white;
+            padding: 60px 0 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column {
+            margin-bottom: 30px;
+        }
+
+        .footer-column h3 {
+            color: white;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary);
+            bottom: 0;
+            right: 0;
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-right: 8px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* التجاوب مع الشاشات المختلفة */
+        @media (max-width: 1200px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .blog-container {
+                gap: 30px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .blog-container {
+                flex-direction: column;
+            }
+            
+            .blog-sidebar {
+                position: static;
+            }
+            
+            .blog-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .blog-hero h1 {
+                font-size: 46px;
+            }
+            
+            .blog-hero p {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                width: 100%;
+                display: none;
+                margin-top: 20px;
+            }
+            
+            .nav-links.active {
+                display: flex;
+            }
+            
+            .nav-links li {
+                margin: 10px 0;
+                margin-left: 0;
+            }
+            
+            .hamburger {
+                display: block;
+                position: absolute;
+                top: 20px;
+                left: 20px;
+            }
+            
+            .blog-hero {
+                padding: 150px 0 80px;
+            }
+            
+            .blog-hero h1 {
+                font-size: 36px;
+            }
+            
+            .blog-hero p {
+                font-size: 18px;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title h2 {
+                font-size: 32px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .blog-hero {
+                padding: 130px 0 60px;
+            }
+            
+            .blog-hero h1 {
+                font-size: 28px;
+            }
+            
+            .blog-hero p {
+                font-size: 16px;
+            }
+            
+            .section-title h2 {
+                font-size: 28px;
+            }
+            
+            .blog-content-card {
+                padding: 20px;
+            }
+            
+            .sidebar-widget {
+                padding: 20px;
+            }
+        }
+        .logo {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px; /* مسافة بين الصورة والنص */
+                    text-decoration: none;
+                }
+
+                .logo-img1 {
+                    width: 100px;     /* حجم الصورة داخل النافبار */
+                    height: 100px;    /* نفس الارتفاع للمحافظة على التناسق */
+                    object-fit: cover;
+                    border-radius: 50%; /* جعل الصورة دائرية (اختياري) */
+                }
+                .logo-img {
+                    width: 40px;     /* حجم الصورة داخل النافبار */
+                    height: 40px;    /* نفس الارتفاع للمحافظة على التناسق */
+                    object-fit: cover;
+                    border-radius: 50%; /* جعل الصورة دائرية (اختياري) */
+                }
+                .logo i {
+                    font-size: 20px;
+                    color: #fff; /* لون الأيقونة */
+                }
+
+                .logo span {
+                    font-size: 18px;
+                    font-weight: bold;
+                    color: #fff; /* نص دوت نت */
+                }
+
+    </style>
+</head>
+<body>
+    <!-- الفقاعات المتحركة -->
+    <div class="bubbles-container" id="bubbles"></div>
+
+    <!-- الشريط العلوي -->
+   <!-- الشريط العلوي -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                     <a href="#" class="logo">
+                        <img src="1.jpg" alt="فريق دوت نت" class="logo-img">
+                        <!-- <i class="fas fa-network-wired"></i> -->
+                        <span>دوت نت</span>
+                    </a>
+
+                <div class="hamburger">☰</div>
+                <ul class="nav-links">
+                    <li><a href="index.html" class="active">الرئيسية</a></li>
+                    <li><a href="offers.html">الإعلانات</a></li>
+                    <li><a href="serves.html">الخدمات</a></li>
+                    <li><a href="blog.html">المدونه</a></li>
+                    <li><a href="about.html">من نحن</a></li>
+                    <li><a href="erp.html">نظام ERP</a></li>
+                    <li><a href="Service-request.html">طلب خدمة</a></li>
+                    <li><a href="contact.html">اتصل بنا</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- قسم الهيرو للمدونة -->
+    <section class="blog-hero">
+        <div class="container">
+            <div class="blog-hero-content">
+                <h1 class="glow-text">مدونة دوت نت</h1>
+                <p>استكشف أحدث المقالات والأخبار في عالم التقنية والتحول الرقمي</p>
+                <a href="#blog" class="btn btn-large pulse-glow">
+                    <i class="fas fa-newspaper"></i> استكشف المقالات
+                </a>
+            </div>
+            
+            <div class="model-container">
+                   <div class="cube">
+                    <div class="face front"><img src="1.jpg" alt="فريق دوت نت" class="logo-img1"></div>
+                    <div class="face back"><img src="1.jpg" alt="فريق دوت نت" class="logo-img1"></div>
+                    <div class="face right"><img src="1.jpg" alt="فريق دوت نت" class="logo-img1"></i></div>
+                    <div class="face left"><img src="1.jpg" alt="فريق دوت نت" class="logo-img1"></div>
+                    <div class="face top"><img src="1.jpg" alt="فريق دوت نت" class="logo-img1"></div>
+                    <div class="face bottom"><img src="1.jpg" alt="فريق دوت نت" class="logo-img1"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم المدونة -->
+    <section class="blog-section" id="blog">
+        <div class="container">
+            <div class="section-title">
+                <h2>آخر المقالات</h2>
+                <p>اكتشف أحدث الأفكار والاتجاهات في عالم التقنية</p>
+            </div>
+            
+            <div class="blog-container">
+                <div class="blog-content">
+                    <div class="blog-grid">
+                        <!-- مقال 1 -->
+                        <div class="blog-card fade-in">
+                            <div class="blog-image">
+                                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="مستقبل الذكاء الاصطناعي">
+                                <div class="blog-category">ذكاء اصطناعي</div>
+                            </div>
+                            <div class="blog-content-card">
+                                <div class="blog-meta">
+                                    <span><i class="far fa-calendar"></i> 15 مارس 2023</span>
+                                    <span><i class="far fa-clock"></i> 5 دقائق قراءة</span>
+                                </div>
+                                <h3>مستقبل الذكاء الاصطناعي في تحليل البيانات الضخمة</h3>
+                                <p>كيف يمكن للذكاء الاصطناعي أن يحدث ثورة في طريقة تحليل البيانات الضخمة واستخلاص الرؤى القيمة منها لتحسين عمليات الأعمال واتخاذ القرارات.</p>
+                                <a href="#" class="blog-read-more">
+                                    اقرأ المزيد <i class="fas fa-arrow-left"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- مقال 2 -->
+                        <div class="blog-card fade-in">
+                            <div class="blog-image">
+                                <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="أمن المعلومات">
+                                <div class="blog-category">الأمن السيبراني</div>
+                            </div>
+                            <div class="blog-content-card">
+                                <div class="blog-meta">
+                                    <span><i class="far fa-calendar"></i> 10 مارس 2023</span>
+                                    <span><i class="far fa-clock"></i> 7 دقائق قراءة</span>
+                                </div>
+                                <h3>أفضل الممارسات لحماية بيانات الشركات في العصر الرقمي</h3>
+                                <p>استكشاف أحدث استراتيجيات الأمن السيبراني وأدوات الحماية التي يجب على الشركات تبنيها لحماية بياناتها من التهديدات الإلكترونية المتطورة.</p>
+                                <a href="#" class="blog-read-more">
+                                    اقرأ المزيد <i class="fas fa-arrow-left"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- مقال 3 -->
+                        <div class="blog-card fade-in">
+                            <div class="blog-image">
+                                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="الحوسبة السحابية">
+                                <div class="blog-category">الحوسبة السحابية</div>
+                            </div>
+                            <div class="blog-content-card">
+                                <div class="blog-meta">
+                                    <span><i class="far fa-calendar"></i> 5 مارس 2023</span>
+                                    <span><i class="far fa-clock"></i> 6 دقائق قراءة</span>
+                                </div>
+                                <h3>كيف تختار الحل السحابي المناسب لشركتك</h3>
+                                <p>دليل شامل لاختيار الحل السحابي الأمثل لاحتياجات شركتك، مع مقارنة بين مزودي الخدمات السحابية الرئيسيين وميزات كل منهم.</p>
+                                <a href="#" class="blog-read-more">
+                                    اقرأ المزيد <i class="fas fa-arrow-left"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- مقال 4 -->
+                        <div class="blog-card fade-in">
+                            <div class="blog-image">
+                                <img src="https://images.unsplash.com/photo-1552664688-cf412ec27db2?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="التجارة الإلكترونية">
+                                <div class="blog-category">التجارة الإلكترونية</div>
+                            </div>
+                            <div class="blog-content-card">
+                                <div class="blog-meta">
+                                    <span><i class="far fa-calendar"></i> 28 فبراير 2023</span>
+                                    <span><i class="far fa-clock"></i> 8 دقائق قراءة</span>
+                                </div>
+                                <h3>اتجاهات جديدة في عالم التجارة الإلكترونية لعام 2023</h3>
+                                <p>استكشاف أحدث الاتجاهات والتقنيات التي تشكل مستقبل التجارة الإلكترونية، من الذكاء الاصطناعي إلى تجارب التسوق الغامرة.</p>
+                                <a href="#" class="blog-read-more">
+                                    اقرأ المزيد <i class="fas fa-arrow-left"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- مقال 5 -->
+                        <div class="blog-card fade-in">
+                            <div class="blog-image">
+                                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="تطوير البرمجيات">
+                                <div class="blog-category">تطوير البرمجيات</div>
+                            </div>
+                            <div class="blog-content-card">
+                                <div class="blog-meta">
+                                    <span><i class="far fa-calendar"></i> 20 فبراير 2023</span>
+                                    <span><i class="far fa-clock"></i> 5 دقائق قراءة</span>
+                                </div>
+                                <h3>أفضل منهجيات تطوير البرمجيات في 2023</h3>
+                                <p>مقارنة شاملة بين منهجيات تطوير البرمجيات المختلفة مثل Agile وScrum وDevOps، وكيفية اختيار المنهجية المناسبة لمشروعك.</p>
+                                <a href="#" class="blog-read-more">
+                                    اقرأ المزيد <i class="fas fa-arrow-left"></i>
+                                </a>
+                            </div>
+                        </div>
+                        
+                        <!-- مقال 6 -->
+                        <div class="blog-card fade-in">
+                            <div class="blog-image">
+                                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="إنترنت الأشياء">
+                                <div class="blog-category">إنترنت الأشياء</div>
+                            </div>
+                            <div class="blog-content-card">
+                                <div class="blog-meta">
+                                    <span><i class="far fa-calendar"></i> 15 فبراير 2023</span>
+                                    <span><i class="far fa-clock"></i> 7 دقائق قراءة</span>
+                                </div>
+                                <h3>كيف يغير إنترنت الأشياء مستقبل المدن الذكية</h3>
+                                <p>استكشاف دور إنترنت الأشياء في تحويل المدن إلى مدن ذكية، من إدارة المرور إلى تحسين كفاءة الطاقة وجودة الحياة.</p>
+                                <a href="#" class="blog-read-more">
+                                    اقرأ المزيد <i class="fas fa-arrow-left"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- ترقيم الصفحات -->
+                    <div class="pagination">
+                        <a href="#" class="btn btn-outline"><i class="fas fa-arrow-right"></i> السابق</a>
+                        <a href="#" class="btn">1</a>
+                        <a href="#" class="btn btn-outline">2</a>
+                        <a href="#" class="btn btn-outline">3</a>
+                        <a href="#" class="btn btn-outline">التالى <i class="fas fa-arrow-left"></i></a>
+                    </div>
+                </div>
+                
+                <!-- الشريط الجانبي -->
+                <div class="blog-sidebar">
+                    <!-- البحث -->
+                    <div class="sidebar-widget">
+                        <h3>البحث</h3>
+                        <div class="search-box">
+                            <input type="text" placeholder="ابحث في المدونة..." class="form-control">
+                            <button class="btn" style="width: 100%; margin-top: 10px;">
+                                <i class="fas fa-search"></i> بحث
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- الفئات -->
+                    <div class="sidebar-widget">
+                        <h3>الفئات</h3>
+                        <ul class="categories-list">
+                            <li><a href="#">ذكاء اصطناعي <span>12</span></a></li>
+                            <li><a href="#">الأمن السيبراني <span>8</span></a></li>
+                            <li><a href="#">الحوسبة السحابية <span>15</span></a></li>
+                            <li><a href="#">التجارة الإلكترونية <span>9</span></a></li>
+                            <li><a href="#">تطوير البرمجيات <span>11</span></a></li>
+                            <li><a href="#">إنترنت الأشياء <span>7</span></a></li>
+                        </ul>
+                    </div>
+                    
+                    <!-- المشاركات الأخيرة -->
+                    <div class="sidebar-widget">
+                        <h3>المشاركات الأخيرة</h3>
+                        <ul class="recent-posts">
+                            <li class="recent-post">
+                                <div class="recent-post-image">
+                                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="مقال حديث">
+                                </div>
+                                <div class="recent-post-content">
+                                    <h4><a href="#">مستقبل الذكاء الاصطناعي في تحليل البيانات</a></h4>
+                                    <span><i class="far fa-calendar"></i> 15 مارس 2023</span>
+                                </div>
+                            </li>
+                            <li class="recent-post">
+                                <div class="recent-post-image">
+                                    <img src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="مقال حديث">
+                                </div>
+                                <div class="recent-post-content">
+                                    <h4><a href="#">أفضل الممارسات لحماية بيانات الشركات</a></h4>
+                                    <span><i class="far fa-calendar"></i> 10 مارس 2023</span>
+                                </div>
+                            </li>
+                            <li class="recent-post">
+                                <div class="recent-post-image">
+                                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&q=80" alt="مقال حديث">
+                                </div>
+                                <div class="recent-post-content">
+                                    <h4><a href="#">كيف تختار الحل السحابي المناسب</a></h4>
+                                    <span><i class="far fa-calendar"></i> 5 مارس 2023</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- الوسوم -->
+                    <div class="sidebar-widget">
+                        <h3>الوسوم الشائعة</h3>
+                        <div class="tags-cloud">
+                            <a href="#" class="tag">ذكاء اصطناعي</a>
+                            <a href="#" class="tag">بيانات ضخمة</a>
+                            <a href="#" class="tag">أمن المعلومات</a>
+                            <a href="#" class="tag">سحابة</a>
+                            <a href="#" class="tag">تطوير</a>
+                            <a href="#" class="tag">ويب</a>
+                            <a href="#" class="tag">جوال</a>
+                            <a href="#" class="tag">ERP</a>
+                            <a href="#" class="tag">تحول رقمي</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- الفوتر -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>دوت نت</h3>
+                    <p>شريكك الموثوق في رحلتك الرقمية. نقدم حلولاً تقنية مبتكرة تساعد عملك على النمو والازدهار.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> الرئيسية</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> من نحن</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> الخدمات</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> اتصل بنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>خدماتنا</h3>
+                    <ul class="footer-links">
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> تصميم المواقع</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> تطبيقات الجوال</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> التسويق الرقمي</a></li>
+                        <li><a href="#"><i class="fas fa-chevron-left"></i> أنظمة ERP</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>اتصل بنا</h3>
+                    <ul class="footer-links">
+                        <li><a href="tel:01123456789"><i class="fas fa-phone"></i> 01123456789</a></li>
+                        <li><a href="mailto:info@dotnet.com"><i class="fas fa-envelope"></i> info@dotnet.com</a></li>
+                        <li><a href="#"><i class="fas fa-map-marker-alt"></i> الرياض، المملكة العربية السعودية</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>جميع الحقوق محفوظة &copy; 2023 دوت نت</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // قائمة التنقل للموبايل
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        });
+
+        // تأثير التمرير للعناصر
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const fadeInOnScroll = () => {
+            fadeElements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        };
+        
+        window.addEventListener('scroll', fadeInOnScroll);
+        window.addEventListener('load', fadeInOnScroll);
+        
+        // تغيير لون الشريط العلوي عند التمرير
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 100) {
+                header.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+                header.style.boxShadow = '0 5px 20px rgba(0, 0, 0, 0.2)';
+            } else {
+                header.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+                header.style.boxShadow = 'var(--shadow)';
+            }
+        });
+
+        // إنشاء الفقاعات المتحركة
+        function createBubbles() {
+            const bubblesContainer = document.getElementById('bubbles');
+            const bubbleCount = 15;
+            
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                
+                // حجم عشوائي للفقاعة
+                const size = Math.random() * 120 + 30;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                
+                // موضع بداية عشوائي
+                bubble.style.left = `${Math.random() * 100}%`;
+                
+                // مدة حركة عشوائية
+                const duration = Math.random() * 30 + 20;
+                bubble.style.animationDuration = `${duration}s`;
+                
+                // تأخير عشوائي
+                bubble.style.animationDelay = `${Math.random() * 20}s`;
+                
+                // تحديد المسار النهائي للفقاعة
+                const xEnd = Math.random() * 200 - 100;
+                bubble.style.setProperty('--bubble-x-end', `${xEnd}px`);
+                
+                // شفافية عشوائية
+                bubble.style.opacity = Math.random() * 0.5 + 0.2;
+                
+                bubblesContainer.appendChild(bubble);
+            }
+        }
+        
+        createBubbles();
+    </script>
+</body>
+</html>
