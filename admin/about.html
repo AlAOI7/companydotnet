@@ -1,0 +1,2430 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دوت نت - من نحن</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="effects.css">
+    <style>
+        :root {
+            --primary: #c00a27;
+            --primary-dark: #8a001a;
+            --primary-light: #ff4d6d;
+            --secondary: #000000;
+            --secondary-light: #1a1a1a;
+            --sidebar: #0c0c0c;
+            --content-bg: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --text: #ffffff;
+            --text-light: #b0b0b0;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --danger: #dc3545;
+            --radius: 12px;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--content-bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+        
+        /* ========== الشريط الجانبي ========== */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar);
+            height: 100vh;
+            position: fixed;
+            right: 0;
+            top: 0;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 0;
+            transition: var(--transition);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 30px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            animation: logoFloat 6s ease-in-out infinite;
+        }
+        
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+        
+        .sidebar-logo span {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary), var(--primary-light), #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0 15px;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: var(--radius);
+            transition: var(--transition);
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-menu a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: var(--transition);
+        }
+        
+        .sidebar-menu a:hover::before {
+            right: 100%;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: white;
+            transform: translateX(-5px);
+        }
+        
+        .sidebar-menu a.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(192, 10, 39, 0.3);
+            animation: pulseGlow 2s infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% {
+                box-shadow: 0 5px 15px rgba(192, 10, 39, 0.3);
+            }
+            50% {
+                box-shadow: 0 5px 20px rgba(192, 10, 39, 0.5),
+                            0 0 30px rgba(192, 10, 39, 0.3);
+            }
+        }
+        
+        .sidebar-menu i {
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+            transition: var(--transition);
+        }
+        
+        .sidebar-menu a:hover i {
+            transform: scale(1.2);
+        }
+        
+        /* ========== المحتوى الرئيسي ========== */
+        .main-content {
+            flex: 1;
+            margin-right: 260px;
+            padding: 20px;
+            transition: var(--transition);
+        }
+        
+        /* ========== شريط التنقل العلوي ========== */
+        .top-navbar {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 15px 25px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideDown 0.5s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .menu-toggle:hover {
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+        
+        .page-title h1 {
+            font-size: 28px;
+            color: white;
+            background: linear-gradient(45deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .page-title p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        /* ========== زر الإضافة ========== */
+        .add-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            padding: 12px 25px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .add-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition);
+        }
+        
+        .add-btn:hover::before {
+            right: 100%;
+        }
+        
+        .add-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(192, 10, 39, 0.3);
+        }
+        
+        /* ========== Modal إدارة محتوى "من نحن" ========== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .about-modal {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .about-modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to left, var(--primary), var(--primary-light));
+            animation: modalGlow 3s linear infinite;
+        }
+        
+        @keyframes modalGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-title {
+            font-size: 22px;
+            color: white;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 24px;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-close:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+        
+        /* ========== محتوى "من نحن" الرئيسي ========== */
+        .about-content-container {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        .company-hero {
+            position: relative;
+            border-radius: var(--radius);
+            overflow: hidden;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .company-hero-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            filter: brightness(0.7);
+            transition: transform 0.5s ease;
+        }
+        
+        .company-hero:hover .company-hero-image {
+            transform: scale(1.05);
+        }
+        
+        .company-hero-content {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            padding: 40px;
+            width: 100%;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        }
+        
+        .company-name {
+            font-size: 36px;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .company-tagline {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+        }
+        
+        /* ========== بطاقات المعلومات ========== */
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .info-card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+                        0 0 30px rgba(192, 10, 39, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to left, var(--primary), var(--primary-light));
+        }
+        
+        .info-card-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, rgba(192, 10, 39, 0.2) 0%, rgba(0, 0, 0, 0.2) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: var(--primary);
+            position: relative;
+            animation: iconPulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .info-card-title {
+            font-size: 22px;
+            color: white;
+            margin-bottom: 15px;
+        }
+        
+        .info-card-content {
+            color: var(--text-light);
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        /* ========== فريق العمل ========== */
+        .team-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: white;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary);
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: 0;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(to left, var(--primary), var(--primary-light));
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .team-member {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary);
+        }
+        
+        .member-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .team-member:hover .member-image {
+            transform: scale(1.05);
+        }
+        
+        .member-info {
+            padding: 20px;
+        }
+        
+        .member-name {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 5px;
+        }
+        
+        .member-position {
+            color: var(--primary);
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .member-bio {
+            color: var(--text-light);
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+        
+        .member-social {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .social-link {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .social-link:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+        
+        /* ========== القيم والمبادئ ========== */
+        .values-section {
+            margin-bottom: 40px;
+        }
+        
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .value-item {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            padding: 25px;
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .value-item:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            transform: translateX(-10px);
+        }
+        
+        .value-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+            opacity: 0.5;
+        }
+        
+        .value-title {
+            font-size: 18px;
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .value-description {
+            color: var(--text-light);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        /* ========== نموذج التعديل ========== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-light);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-label i {
+            color: var(--primary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius);
+            color: white;
+            font-size: 16px;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(192, 10, 39, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition);
+        }
+        
+        .btn:hover::before {
+            right: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(192, 10, 39, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* ========== إحصائيات الشركة ========== */
+        .stats-section {
+            margin: 40px 0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, rgba(192, 10, 39, 0.1) 0%, rgba(0, 0, 0, 0.1) 100%);
+            border-radius: var(--radius);
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary);
+        }
+        
+        .stat-number {
+            font-size: 42px;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 10px;
+            animation: countUp 2s ease-out;
+        }
+        
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .stat-label {
+            color: var(--text-light);
+            font-size: 16px;
+        }
+        
+        /* ========== أزرار التعديل ========== */
+        .edit-buttons {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 100;
+        }
+        
+        .edit-section-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(192, 10, 39, 0.3);
+        }
+        
+        .edit-section-btn:hover {
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: 0 8px 20px rgba(192, 10, 39, 0.4);
+        }
+        
+        .edit-section-btn i {
+            font-size: 20px;
+        }
+        
+        .edit-tooltip {
+            position: absolute;
+            right: 60px;
+            background-color: var(--card-bg);
+            color: white;
+            padding: 8px 15px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: var(--transition);
+            white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .edit-section-btn:hover .edit-tooltip {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        /* ========== Modal تأكيد الحذف ========== */
+        .delete-modal .modal-body {
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .delete-modal .modal-body i {
+            font-size: 64px;
+            color: var(--danger);
+            margin-bottom: 20px;
+            animation: vibrate 0.5s ease-in-out;
+        }
+        
+        @keyframes vibrate {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        /* ========== رسائل التحميل ========== */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-light);
+        }
+        
+        .loading i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--primary);
+            animation: spin 2s linear infinite;
+        }
+        
+        /* ========== التأثيرات ثلاثية الأبعاد ========== */
+        .hover-3d {
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .hover-3d:hover {
+            transform: translateZ(20px) rotateX(5deg) rotateY(5deg);
+        }
+        
+        .float-3d {
+            animation: float3D 6s ease-in-out infinite;
+        }
+        
+        @keyframes float3D {
+            0%, 100% {
+                transform: translateY(0) rotateX(0) rotateY(0);
+            }
+            33% {
+                transform: translateY(-20px) rotateX(5deg) rotateY(5deg);
+            }
+            66% {
+                transform: translateY(-10px) rotateX(-5deg) rotateY(-5deg);
+            }
+        }
+        
+        /* ========== التجاوب مع الشاشات ========== */
+        @media (max-width: 1200px) {
+            .info-cards {
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            }
+            
+            .team-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(100%);
+                width: 280px;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-right: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .overlay {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.7);
+                z-index: 999;
+                display: none;
+            }
+            
+            .overlay.active {
+                display: block;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .company-hero-content {
+                padding: 30px 20px;
+            }
+            
+            .company-name {
+                font-size: 28px;
+            }
+            
+            .company-tagline {
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .info-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .team-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .edit-buttons {
+                bottom: 20px;
+                left: 20px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 15px;
+            }
+            
+            .top-navbar {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .add-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .company-hero {
+                height: 200px;
+            }
+            
+            .company-hero-image {
+                height: 200px;
+            }
+            
+            .company-hero-content {
+                padding: 20px;
+            }
+            
+            .company-name {
+                font-size: 24px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- الفقاعات المتحركة -->
+    <div class="bubbles-container" id="bubblesContainer"></div>
+    
+    <!-- الجسيمات المتحركة -->
+    <div class="particles-container" id="particlesContainer"></div>
+    
+    <!-- الشريط الجانبي -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="1.jpg" alt="دوت نت" class="float-3d">
+                <span>دوت نت</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.html">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>لوحة التحكم</span>
+            </a></li>
+            
+            <li><a href="offers.html">
+                <i class="fas fa-bullhorn"></i>
+                <span>الإعلانات</span>
+            </a></li>
+            
+            <li><a href="serves.html">
+                <i class="fas fa-concierge-bell"></i>
+                <span>الخدمات</span>
+            </a></li>
+            
+            <li><a href="blog.html">
+                <i class="fas fa-blog"></i>
+                <span>المدونة</span>
+            </a></li>
+            
+            <li><a href="about.html" class="active">
+                <i class="fas fa-info-circle"></i>
+                <span>من نحن</span>
+            </a></li>
+            
+            <li><a href="erp.html">
+                <i class="fas fa-cogs"></i>
+                <span>نظام ERP</span>
+            </a></li>
+            
+            <li><a href="Service-request.html">
+                <i class="fas fa-headset"></i>
+                <span>طلب خدمة</span>
+            </a></li>
+            
+            <li><a href="contact.html">
+                <i class="fas fa-envelope"></i>
+                <span>اتصل بنا</span>
+            </a></li>
+            
+            <li><a href="#" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>تسجيل الخروج</span>
+            </a></li>
+        </ul>
+    </div>
+    
+    <!-- طبقة التعتيم للشريط الجانبي على الجوال -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content" id="mainContent">
+        <!-- شريط التنقل العلوي -->
+        <nav class="top-navbar">
+            <div class="nav-left">
+                <button class="menu-toggle hover-3d" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="page-title">
+                    <h1>من نحن</h1>
+                    <p>إدارة محتوى صفحة "من نحن"</p>
+                </div>
+            </div>
+            
+            <button class="add-btn" id="addAboutBtn">
+                <i class="fas fa-cog"></i>
+                <span>إدارة المحتوى</span>
+            </button>
+        </nav>
+        
+        <!-- محتوى "من نحن" -->
+        <div class="about-content-container" id="aboutContent">
+            <!-- سيتم تحميل المحتوى ديناميكياً -->
+        </div>
+    </div>
+    
+    <!-- Modal إدارة محتوى "من نحن" -->
+    <div class="modal-overlay" id="aboutModal">
+        <div class="about-modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">إدارة محتوى "من نحن"</h3>
+                <button class="modal-close" id="closeModalBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div id="aboutFormContainer">
+                <!-- سيتم تحميل النموذج المناسب حسب القسم -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal تأكيد الحذف -->
+    <div class="modal-overlay delete-modal" id="deleteModal">
+        <div class="about-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">تأكيد الحذف</h3>
+                <button class="modal-close" id="closeDeleteModalBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <i class="fas fa-trash-alt"></i>
+                <h4 style="margin-bottom: 10px;" id="deleteMessage">هل أنت متأكد من حذف هذا العنصر؟</h4>
+                <p style="color: var(--text-light);">لا يمكن التراجع عن هذا الإجراء بعد التنفيذ.</p>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-secondary" id="cancelDeleteBtn">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">
+                    <i class="fas fa-trash"></i> حذف
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- أزرار التعديل العائمة -->
+    <div class="edit-buttons" id="editButtons" style="display: none;">
+        <button class="edit-section-btn" id="editHeroBtn" data-section="hero">
+            <i class="fas fa-image"></i>
+            <span class="edit-tooltip">تعديل البطل</span>
+        </button>
+        <button class="edit-section-btn" id="editMissionBtn" data-section="mission">
+            <i class="fas fa-bullseye"></i>
+            <span class="edit-tooltip">تعديل الرؤية والرسالة</span>
+        </button>
+        <button class="edit-section-btn" id="editTeamBtn" data-section="team">
+            <i class="fas fa-users"></i>
+            <span class="edit-tooltip">إدارة الفريق</span>
+        </button>
+        <button class="edit-section-btn" id="editValuesBtn" data-section="values">
+            <i class="fas fa-star"></i>
+            <span class="edit-tooltip">تعديل القيم</span>
+        </button>
+        <button class="edit-section-btn" id="editStatsBtn" data-section="stats">
+            <i class="fas fa-chart-line"></i>
+            <span class="edit-tooltip">تعديل الإحصائيات</span>
+        </button>
+    </div>
+
+    <script>
+        // بيانات صفحة "من نحن" الافتراضية
+        const defaultAboutData = {
+            hero: {
+                title: "دوت نت",
+                tagline: "شريكك الموثوق في رحلتك الرقمية نحو التميز والنجاح",
+                image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+            },
+            mission: {
+                vision: "أن نكون الشركة الرائدة في تقديم الحلول الرقمية المتكاملة في المنطقة",
+                mission: "تمكين الشركات والمؤسسات من تحقيق أهدافها من خلال حلول رقمية مبتكرة ومخصصة",
+                about: "تأسست شركة دوت نت عام 2010 بمهمة واضحة وهي مساعدة الشركات على الانتقال إلى العالم الرقمي بثقة وسهولة. نحن فريق من الخبراء والمتخصصين في مختلف المجالات التقنية والتسويقية."
+            },
+            team: [
+                {
+                    id: 1,
+                    name: "محمد أحمد",
+                    position: "المدير التنفيذي",
+                    bio: "خبير في التحول الرقمي مع أكثر من 15 سنة خبرة في مجال التقنية",
+                    image: "1.jpg",
+                    social: {
+                        linkedin: "#",
+                        twitter: "#",
+                        facebook: "#"
+                    }
+                },
+                {
+                    id: 2,
+                    name: "سارة محمد",
+                    position: "مديرة التصميم",
+                    bio: "مصممة واجهات مستخدم حائزة على جوائز مع خبرة 10 سنوات في التصميم",
+                    image: "1.jpg",
+                    social: {
+                        linkedin: "#",
+                        twitter: "#",
+                        facebook: "#"
+                    }
+                },
+                {
+                    id: 3,
+                    name: "أحمد خالد",
+                    position: "رئيس قسم التطوير",
+                    bio: "مطور برمجيات مع خبرة في أنظمة إدارة المؤسسات والذكاء الاصطناعي",
+                    image: "1.jpg",
+                    social: {
+                        linkedin: "#",
+                        twitter: "#",
+                        facebook: "#"
+                    }
+                },
+                {
+                    id: 4,
+                    name: "ليلى سعيد",
+                    position: "مديرة التسويق",
+                    bio: "متخصصة في التسويق الرقمي وتحليل البيانات مع خبرة 8 سنوات",
+                    image: "1.jpg",
+                    social: {
+                        linkedin: "#",
+                        twitter: "#",
+                        facebook: "#"
+                    }
+                }
+            ],
+            values: [
+                {
+                    id: 1,
+                    title: "الابتكار",
+                    description: "نسعى دائماً لتقديم حلول مبتكرة تلبي احتياجات العملاء وتتجاوز توقعاتهم"
+                },
+                {
+                    id: 2,
+                    title: "الجودة",
+                    description: "نلتزم بأعلى معايير الجودة في كل ما نقدمه من خدمات وحلول"
+                },
+                {
+                    id: 3,
+                    title: "الشراكة",
+                    description: "نؤمن ببناء شراكات طويلة الأمد مع عملائنا قائمة على الثقة والشفافية"
+                },
+                {
+                    id: 4,
+                    title: "التطوير المستمر",
+                    description: "نسعى دائماً لتطوير أنفسنا وحلولنا لمواكبة أحدث التطورات التقنية"
+                }
+            ],
+            stats: [
+                {
+                    id: 1,
+                    number: "500+",
+                    label: "عميل راضٍ"
+                },
+                {
+                    id: 2,
+                    number: "50+",
+                    label: "خبير متخصص"
+                },
+                {
+                    id: 3,
+                    number: "10+",
+                    label: "سنوات خبرة"
+                },
+                {
+                    id: 4,
+                    number: "200+",
+                    label: "مشروع ناجح"
+                }
+            ]
+        };
+
+        // متغيرات النظام
+        let aboutData = JSON.parse(localStorage.getItem('aboutData')) || defaultAboutData;
+        let currentEditSection = null;
+        let currentEditItem = null;
+        let deleteType = null;
+        let deleteId = null;
+
+        // تهيئة النظام
+        document.addEventListener('DOMContentLoaded', function() {
+            // التحقق من تسجيل الدخول
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn !== 'true') {
+                window.location.href = 'login.html';
+            }
+            
+            initAboutSystem();
+            loadAboutContent();
+            setupEventListeners();
+            createParticles();
+            createBubbles();
+        });
+
+        // تهيئة نظام "من نحن"
+        function initAboutSystem() {
+            if (!localStorage.getItem('aboutData')) {
+                localStorage.setItem('aboutData', JSON.stringify(defaultAboutData));
+                aboutData = defaultAboutData;
+            }
+        }
+
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // إدارة الشريط الجانبي
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // زر إدارة المحتوى
+            document.getElementById('addAboutBtn').addEventListener('click', showAboutModal);
+            
+            // إغلاق النماذج
+            document.getElementById('closeModalBtn').addEventListener('click', hideAboutModal);
+            document.getElementById('closeDeleteModalBtn').addEventListener('click', hideDeleteModal);
+            document.getElementById('cancelDeleteBtn').addEventListener('click', hideDeleteModal);
+            
+            // تأكيد الحذف
+            document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
+            
+            // أزرار التعديل العائمة
+            document.getElementById('editHeroBtn').addEventListener('click', () => editSection('hero'));
+            document.getElementById('editMissionBtn').addEventListener('click', () => editSection('mission'));
+            document.getElementById('editTeamBtn').addEventListener('click', () => editSection('team'));
+            document.getElementById('editValuesBtn').addEventListener('click', () => editSection('values'));
+            document.getElementById('editStatsBtn').addEventListener('click', () => editSection('stats'));
+            
+            // تسجيل الخروج
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('هل تريد تسجيل الخروج؟')) {
+                    localStorage.removeItem('isLoggedIn');
+                    window.location.href = 'login.html';
+                }
+            });
+            
+            // إغلاق النماذج بالنقر خارجها
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal-overlay')) {
+                    if (e.target.id === 'aboutModal') hideAboutModal();
+                    if (e.target.id === 'deleteModal') hideDeleteModal();
+                }
+            });
+        }
+
+        // إنشاء الجسيمات
+        function createParticles() {
+            const container = document.getElementById('particlesContainer');
+            if (!container) return;
+            
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 10 + 5;
+                const xOffset = Math.random() * 200 - 100;
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 20;
+                
+                particle.style.cssText = `
+                    --size: ${size};
+                    --x-offset: ${xOffset}px;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${Math.random() * 100}%;
+                    animation-duration: ${duration}s;
+                    animation-delay: ${delay}s;
+                `;
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // إنشاء الفقاعات
+        function createBubbles() {
+            const container = document.getElementById('bubblesContainer');
+            if (!container) return;
+            
+            const bubbleCount = 15;
+            
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                
+                const size = Math.random() * 80 + 30;
+                const xEnd = Math.random() * 200 - 100;
+                const duration = Math.random() * 20 + 15;
+                const delay = Math.random() * 15;
+                
+                bubble.style.cssText = `
+                    --bubble-x-end: ${xEnd}px;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${Math.random() * 100}%;
+                    animation-duration: ${duration}s;
+                    animation-delay: ${delay}s;
+                    opacity: ${Math.random() * 0.3 + 0.1};
+                `;
+                
+                container.appendChild(bubble);
+            }
+        }
+
+        // تحميل محتوى "من نحن"
+        function loadAboutContent() {
+            const container = document.getElementById('aboutContent');
+            
+            container.innerHTML = `
+                <!-- قسم البطل -->
+                <div class="company-hero" id="heroSection">
+                    <img src="${aboutData.hero.image}" alt="${aboutData.hero.title}" class="company-hero-image" 
+                         onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80'">
+                    <div class="company-hero-content">
+                        <h1 class="company-name">${aboutData.hero.title}</h1>
+                        <p class="company-tagline">${aboutData.hero.tagline}</p>
+                    </div>
+                </div>
+                
+                <!-- معلومات الشركة -->
+                <div class="info-cards">
+                    <div class="info-card hover-3d" id="visionCard">
+                        <div class="info-card-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <h3 class="info-card-title">رؤيتنا</h3>
+                        <div class="info-card-content">
+                            ${aboutData.mission.vision}
+                        </div>
+                    </div>
+                    
+                    <div class="info-card hover-3d" id="missionCard">
+                        <div class="info-card-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <h3 class="info-card-title">رسالتنا</h3>
+                        <div class="info-card-content">
+                            ${aboutData.mission.mission}
+                        </div>
+                    </div>
+                    
+                    <div class="info-card hover-3d" id="aboutCard">
+                        <div class="info-card-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <h3 class="info-card-title">عن الشركة</h3>
+                        <div class="info-card-content">
+                            ${aboutData.mission.about}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- الإحصائيات -->
+                <div class="stats-section" id="statsSection">
+                    <h2 class="section-title">إحصائياتنا</h2>
+                    <div class="stats-grid">
+                        ${aboutData.stats.map(stat => `
+                            <div class="stat-card hover-3d">
+                                <div class="stat-number">${stat.number}</div>
+                                <div class="stat-label">${stat.label}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <!-- فريق العمل -->
+                <div class="team-section" id="teamSection">
+                    <h2 class="section-title">فريق العمل</h2>
+                    <div class="team-grid">
+                        ${aboutData.team.map(member => `
+                            <div class="team-member hover-3d" data-id="${member.id}">
+                                <img src="${member.image}" alt="${member.name}" class="member-image"
+                                     onerror="this.src='1.jpg'">
+                                <div class="member-info">
+                                    <h3 class="member-name">${member.name}</h3>
+                                    <p class="member-position">${member.position}</p>
+                                    <p class="member-bio">${member.bio}</p>
+                                    <div class="member-social">
+                                        <a href="${member.social.linkedin}" class="social-link" target="_blank">
+                                            <i class="fab fa-linkedin-in"></i>
+                                        </a>
+                                        <a href="${member.social.twitter}" class="social-link" target="_blank">
+                                            <i class="fab fa-twitter"></i>
+                                        </a>
+                                        <a href="${member.social.facebook}" class="social-link" target="_blank">
+                                            <i class="fab fa-facebook-f"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                
+                <!-- القيم والمبادئ -->
+                <div class="values-section" id="valuesSection">
+                    <h2 class="section-title">قيمنا ومبادئنا</h2>
+                    <div class="values-grid">
+                        ${aboutData.values.map((value, index) => `
+                            <div class="value-item hover-3d" data-id="${value.id}">
+                                <div class="value-number">0${index + 1}</div>
+                                <h3 class="value-title">${value.title}</h3>
+                                <p class="value-description">${value.description}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            // إظهار أزرار التعديل
+            document.getElementById('editButtons').style.display = 'flex';
+            
+            // إضافة مستمعي الأحداث لأعضاء الفريق والقيم
+            addEventListenersToItems();
+        }
+
+        // إضافة مستمعي الأحداث للعناصر
+        function addEventListenersToItems() {
+            // أعضاء الفريق
+            document.querySelectorAll('.team-member').forEach(member => {
+                member.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                    const id = parseInt(this.getAttribute('data-id'));
+                    const memberData = aboutData.team.find(m => m.id === id);
+                    if (memberData) {
+                        showContextMenu(e, 'team', memberData);
+                    }
+                });
+            });
+            
+            // القيم
+            document.querySelectorAll('.value-item').forEach(value => {
+                value.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                    const id = parseInt(this.getAttribute('data-id'));
+                    const valueData = aboutData.values.find(v => v.id === id);
+                    if (valueData) {
+                        showContextMenu(e, 'values', valueData);
+                    }
+                });
+            });
+            
+            // الإحصائيات
+            document.querySelectorAll('.stat-card').forEach(stat => {
+                stat.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                    const index = Array.from(this.parentNode.children).indexOf(this);
+                    const statData = aboutData.stats[index];
+                    if (statData) {
+                        showContextMenu(e, 'stats', statData);
+                    }
+                });
+            });
+        }
+
+        // عرض قائمة السياق
+        function showContextMenu(event, type, data) {
+            // إزالة أي قائمة سياق موجودة
+            const existingMenu = document.querySelector('.context-menu');
+            if (existingMenu) existingMenu.remove();
+            
+            // إنشاء قائمة السياق
+            const contextMenu = document.createElement('div');
+            contextMenu.className = 'context-menu';
+            contextMenu.innerHTML = `
+                <button class="context-menu-item edit-item" data-type="${type}" data-id="${data.id}">
+                    <i class="fas fa-edit"></i> تعديل
+                </button>
+                <button class="context-menu-item delete-item" data-type="${type}" data-id="${data.id}">
+                    <i class="fas fa-trash"></i> حذف
+                </button>
+            `;
+            
+            // التنسيق
+            contextMenu.style.cssText = `
+                position: fixed;
+                top: ${event.clientY}px;
+                left: ${event.clientX}px;
+                background-color: var(--card-bg);
+                border-radius: var(--radius);
+                padding: 10px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                z-index: 10000;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+                min-width: 150px;
+            `;
+            
+            document.body.appendChild(contextMenu);
+            
+            // إضافة مستمعي الأحداث
+            contextMenu.querySelector('.edit-item').addEventListener('click', () => {
+                editItem(type, data);
+                contextMenu.remove();
+            });
+            
+            contextMenu.querySelector('.delete-item').addEventListener('click', () => {
+                showDeleteModal(type, data.id, data);
+                contextMenu.remove();
+            });
+            
+            // إزالة القائمة عند النقر خارجها
+            setTimeout(() => {
+                document.addEventListener('click', function removeMenu() {
+                    contextMenu.remove();
+                    document.removeEventListener('click', removeMenu);
+                });
+            }, 100);
+        }
+
+        // عرض Modal "من نحن"
+        function showAboutModal(section = null, item = null) {
+            const modal = document.getElementById('aboutModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const formContainer = document.getElementById('aboutFormContainer');
+            
+            currentEditSection = section;
+            currentEditItem = item;
+            
+            if (section && item) {
+                // تعديل عنصر معين
+                modalTitle.textContent = `تعديل ${getSectionName(section)}`;
+                formContainer.innerHTML = createEditForm(section, item);
+            } else if (section) {
+                // تعديل قسم معين
+                modalTitle.textContent = `تعديل ${getSectionName(section)}`;
+                formContainer.innerHTML = createSectionForm(section);
+            } else {
+                // القائمة الرئيسية
+                modalTitle.textContent = 'إدارة محتوى "من نحن"';
+                formContainer.innerHTML = createMainMenu();
+            }
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // إضافة مستمعي الأحداث للنموذج
+            if (section) {
+                setTimeout(() => {
+                    const form = document.getElementById('aboutForm');
+                    if (form) {
+                        form.addEventListener('submit', handleFormSubmit);
+                    }
+                    
+                    // مستمعي الأحداث للأزرار الإضافية
+                    const addMemberBtn = document.getElementById('addMemberBtn');
+                    if (addMemberBtn) {
+                        addMemberBtn.addEventListener('click', () => editItem('team'));
+                    }
+                    
+                    const addValueBtn = document.getElementById('addValueBtn');
+                    if (addValueBtn) {
+                        addValueBtn.addEventListener('click', () => editItem('values'));
+                    }
+                    
+                    const addStatBtn = document.getElementById('addStatBtn');
+                    if (addStatBtn) {
+                        addStatBtn.addEventListener('click', () => editItem('stats'));
+                    }
+                }, 100);
+            }
+        }
+
+        // الحصول على اسم القسم
+        function getSectionName(section) {
+            const names = {
+                hero: 'البطل',
+                mission: 'الرؤية والرسالة',
+                team: 'عضو الفريق',
+                values: 'القيمة',
+                stats: 'الإحصائية',
+                vision: 'الرؤية',
+                about: 'عن الشركة'
+            };
+            return names[section] || section;
+        }
+
+        // إنشاء القائمة الرئيسية
+        function createMainMenu() {
+            return `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <button class="edit-section-btn" style="width: 100%; height: auto; padding: 30px; flex-direction: column;" onclick="editSection('hero')">
+                        <i class="fas fa-image" style="font-size: 48px; margin-bottom: 15px;"></i>
+                        <span style="font-size: 18px;">إدارة البطل</span>
+                        <small style="color: var(--text-light); margin-top: 10px;">صورة وعنوان الشركة</small>
+                    </button>
+                    
+                    <button class="edit-section-btn" style="width: 100%; height: auto; padding: 30px; flex-direction: column;" onclick="editSection('mission')">
+                        <i class="fas fa-bullseye" style="font-size: 48px; margin-bottom: 15px;"></i>
+                        <span style="font-size: 18px;">الرؤية والرسالة</span>
+                        <small style="color: var(--text-light); margin-top: 10px;">رؤية ورسالة الشركة</small>
+                    </button>
+                    
+                    <button class="edit-section-btn" style="width: 100%; height: auto; padding: 30px; flex-direction: column;" onclick="editSection('team')">
+                        <i class="fas fa-users" style="font-size: 48px; margin-bottom: 15px;"></i>
+                        <span style="font-size: 18px;">فريق العمل</span>
+                        <small style="color: var(--text-light); margin-top: 10px;">إدارة أعضاء الفريق</small>
+                    </button>
+                    
+                    <button class="edit-section-btn" style="width: 100%; height: auto; padding: 30px; flex-direction: column;" onclick="editSection('values')">
+                        <i class="fas fa-star" style="font-size: 48px; margin-bottom: 15px;"></i>
+                        <span style="font-size: 18px;">القيم والمبادئ</span>
+                        <small style="color: var(--text-light); margin-top: 10px;">قيم الشركة ومبادئها</small>
+                    </button>
+                    
+                    <button class="edit-section-btn" style="width: 100%; height: auto; padding: 30px; flex-direction: column;" onclick="editSection('stats')">
+                        <i class="fas fa-chart-line" style="font-size: 48px; margin-bottom: 15px;"></i>
+                        <span style="font-size: 18px;">الإحصائيات</span>
+                        <small style="color: var(--text-light); margin-top: 10px;">إحصائيات الشركة</small>
+                    </button>
+                </div>
+            `;
+        }
+
+        // إنشاء نموذج القسم
+        function createSectionForm(section) {
+            if (section === 'hero') {
+                return createHeroForm();
+            } else if (section === 'mission') {
+                return createMissionForm();
+            } else if (section === 'team') {
+                return createTeamForm();
+            } else if (section === 'values') {
+                return createValuesForm();
+            } else if (section === 'stats') {
+                return createStatsForm();
+            }
+            return '';
+        }
+
+        // إنشاء نموذج البطل
+        function createHeroForm() {
+            return `
+                <form id="aboutForm">
+                    <div class="form-group full-width">
+                        <label for="heroTitle" class="form-label">
+                            <i class="fas fa-heading"></i> عنوان الشركة
+                        </label>
+                        <input type="text" id="heroTitle" class="form-control" 
+                               value="${aboutData.hero.title}" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="heroTagline" class="form-label">
+                            <i class="fas fa-quote-right"></i> الشعار
+                        </label>
+                        <textarea id="heroTagline" class="form-control" rows="3" required>${aboutData.hero.tagline}</textarea>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="heroImage" class="form-label">
+                            <i class="fas fa-image"></i> رابط صورة الخلفية
+                        </label>
+                        <input type="url" id="heroImage" class="form-control" 
+                               value="${aboutData.hero.image}" required>
+                        <small style="color: var(--text-light); display: block; margin-top: 5px;">أدخل رابط صورة عالية الجودة للخلفية</small>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="hideAboutModal()">
+                            <i class="fas fa-times"></i> إلغاء
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> حفظ التغييرات
+                        </button>
+                    </div>
+                </form>
+            `;
+        }
+
+        // إنشاء نموذج الرؤية والرسالة
+        function createMissionForm() {
+            return `
+                <form id="aboutForm">
+                    <div class="form-group full-width">
+                        <label for="vision" class="form-label">
+                            <i class="fas fa-eye"></i> الرؤية
+                        </label>
+                        <textarea id="vision" class="form-control" rows="3" required>${aboutData.mission.vision}</textarea>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="mission" class="form-label">
+                            <i class="fas fa-bullseye"></i> الرسالة
+                        </label>
+                        <textarea id="mission" class="form-control" rows="3" required>${aboutData.mission.mission}</textarea>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="about" class="form-label">
+                            <i class="fas fa-info-circle"></i> عن الشركة
+                        </label>
+                        <textarea id="about" class="form-control" rows="5" required>${aboutData.mission.about}</textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="hideAboutModal()">
+                            <i class="fas fa-times"></i> إلغاء
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> حفظ التغييرات
+                        </button>
+                    </div>
+                </form>
+            `;
+        }
+
+        // إنشاء نموذج الفريق
+        function createTeamForm(item = null) {
+            if (item) {
+                // تعديل عضو موجود
+                return createTeamMemberForm(item);
+            }
+            
+            // عرض قائمة الأعضاء مع إضافة جديد
+            return `
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: white; margin-bottom: 20px;">فريق العمل</h3>
+                    <div style="max-height: 300px; overflow-y: auto; margin-bottom: 20px;">
+                        ${aboutData.team.map(member => `
+                            <div style="display: flex; align-items: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: var(--radius); margin-bottom: 10px;">
+                                <img src="${member.image}" alt="${member.name}" 
+                                     style="width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-left: 15px;"
+                                     onerror="this.src='1.jpg'">
+                                <div style="flex: 1;">
+                                    <h4 style="color: white; margin-bottom: 5px;">${member.name}</h4>
+                                    <p style="color: var(--text-light); font-size: 14px;">${member.position}</p>
+                                </div>
+                                <div>
+                                    <button class="btn btn-secondary" onclick="editItem('team', ${JSON.stringify(member).replace(/"/g, '&quot;')})" style="padding: 5px 10px; font-size: 12px;">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" onclick="showDeleteModal('team', ${member.id}, ${JSON.stringify(member).replace(/"/g, '&quot;')})" style="padding: 5px 10px; font-size: 12px; margin-right: 5px;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary" id="addMemberBtn" style="width: 100%;">
+                        <i class="fas fa-plus"></i> إضافة عضو جديد
+                    </button>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="hideAboutModal()">
+                        <i class="fas fa-times"></i> إغلاق
+                    </button>
+                </div>
+            `;
+        }
+
+        // إنشاء نموذج عضو الفريق
+        function createTeamMemberForm(member = null) {
+            const isEdit = !!member;
+            
+            return `
+                <form id="aboutForm">
+                    <input type="hidden" id="memberId" value="${isEdit ? member.id : ''}">
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="memberName" class="form-label">
+                                <i class="fas fa-user"></i> الاسم
+                            </label>
+                            <input type="text" id="memberName" class="form-control" 
+                                   value="${isEdit ? member.name : ''}" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="memberPosition" class="form-label">
+                                <i class="fas fa-briefcase"></i> المنصب
+                            </label>
+                            <input type="text" id="memberPosition" class="form-control" 
+                                   value="${isEdit ? member.position : ''}" required>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="memberBio" class="form-label">
+                                <i class="fas fa-align-left"></i> السيرة الذاتية
+                            </label>
+                            <textarea id="memberBio" class="form-control" rows="3" required>${isEdit ? member.bio : ''}</textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="memberImage" class="form-label">
+                                <i class="fas fa-image"></i> صورة العضو
+                            </label>
+                            <input type="url" id="memberImage" class="form-control" 
+                                   value="${isEdit ? member.image : '1.jpg'}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-share-alt"></i> روابط التواصل
+                            </label>
+                            <input type="url" id="memberLinkedin" class="form-control" 
+                                   value="${isEdit ? member.social.linkedin : '#'}" placeholder="رابط LinkedIn">
+                            <input type="url" id="memberTwitter" class="form-control" style="margin-top: 10px;"
+                                   value="${isEdit ? member.social.twitter : '#'}" placeholder="رابط Twitter">
+                            <input type="url" id="memberFacebook" class="form-control" style="margin-top: 10px;"
+                                   value="${isEdit ? member.social.facebook : '#'}" placeholder="رابط Facebook">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="showAboutModal('team')">
+                            <i class="fas fa-arrow-right"></i> رجوع
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> ${isEdit ? 'تحديث' : 'إضافة'}
+                        </button>
+                    </div>
+                </form>
+            `;
+        }
+
+        // إنشاء نموذج القيم
+        function createValuesForm(item = null) {
+            if (item) {
+                // تعديل قيمة موجودة
+                return createValueForm(item);
+            }
+            
+            // عرض قائمة القيم مع إضافة جديد
+            return `
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: white; margin-bottom: 20px;">القيم والمبادئ</h3>
+                    <div style="max-height: 300px; overflow-y: auto; margin-bottom: 20px;">
+                        ${aboutData.values.map(value => `
+                            <div style="padding: 15px; background: rgba(255,255,255,0.05); border-radius: var(--radius); margin-bottom: 10px;">
+                                <h4 style="color: white; margin-bottom: 5px;">${value.title}</h4>
+                                <p style="color: var(--text-light); font-size: 14px; margin-bottom: 10px;">${value.description}</p>
+                                <div>
+                                    <button class="btn btn-secondary" onclick="editItem('values', ${JSON.stringify(value).replace(/"/g, '&quot;')})" style="padding: 5px 10px; font-size: 12px;">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" onclick="showDeleteModal('values', ${value.id}, ${JSON.stringify(value).replace(/"/g, '&quot;')})" style="padding: 5px 10px; font-size: 12px; margin-right: 5px;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary" id="addValueBtn" style="width: 100%;">
+                        <i class="fas fa-plus"></i> إضافة قيمة جديدة
+                    </button>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="hideAboutModal()">
+                        <i class="fas fa-times"></i> إغلاق
+                    </button>
+                </div>
+            `;
+        }
+
+        // إنشاء نموذج قيمة
+        function createValueForm(value = null) {
+            const isEdit = !!value;
+            
+            return `
+                <form id="aboutForm">
+                    <input type="hidden" id="valueId" value="${isEdit ? value.id : ''}">
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="valueTitle" class="form-label">
+                                <i class="fas fa-heading"></i> عنوان القيمة
+                            </label>
+                            <input type="text" id="valueTitle" class="form-control" 
+                                   value="${isEdit ? value.title : ''}" required>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="valueDescription" class="form-label">
+                                <i class="fas fa-align-left"></i> وصف القيمة
+                            </label>
+                            <textarea id="valueDescription" class="form-control" rows="4" required>${isEdit ? value.description : ''}</textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="showAboutModal('values')">
+                            <i class="fas fa-arrow-right"></i> رجوع
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> ${isEdit ? 'تحديث' : 'إضافة'}
+                        </button>
+                    </div>
+                </form>
+            `;
+        }
+
+        // إنشاء نموذج الإحصائيات
+        function createStatsForm(item = null) {
+            if (item) {
+                // تعديل إحصائية موجودة
+                return createStatForm(item);
+            }
+            
+            // عرض قائمة الإحصائيات مع إضافة جديد
+            return `
+                <div style="margin-bottom: 30px;">
+                    <h3 style="color: white; margin-bottom: 20px;">الإحصائيات</h3>
+                    <div style="max-height: 300px; overflow-y: auto; margin-bottom: 20px;">
+                        ${aboutData.stats.map((stat, index) => `
+                            <div style="display: flex; align-items: center; padding: 15px; background: rgba(255,255,255,0.05); border-radius: var(--radius); margin-bottom: 10px;">
+                                <div style="width: 40px; height: 40px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-left: 15px; font-weight: bold;">
+                                    ${index + 1}
+                                </div>
+                                <div style="flex: 1;">
+                                    <h4 style="color: var(--primary); margin-bottom: 5px;">${stat.number}</h4>
+                                    <p style="color: var(--text-light); font-size: 14px;">${stat.label}</p>
+                                </div>
+                                <div>
+                                    <button class="btn btn-secondary" onclick="editItem('stats', ${JSON.stringify(stat).replace(/"/g, '&quot;')})" style="padding: 5px 10px; font-size: 12px;">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" onclick="showDeleteModal('stats', ${stat.id}, ${JSON.stringify(stat).replace(/"/g, '&quot;')})" style="padding: 5px 10px; font-size: 12px; margin-right: 5px;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <button type="button" class="btn btn-primary" id="addStatBtn" style="width: 100%;">
+                        <i class="fas fa-plus"></i> إضافة إحصائية جديدة
+                    </button>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="hideAboutModal()">
+                        <i class="fas fa-times"></i> إغلاق
+                    </button>
+                </div>
+            `;
+        }
+
+        // إنشاء نموذج إحصائية
+        function createStatForm(stat = null) {
+            const isEdit = !!stat;
+            
+            return `
+                <form id="aboutForm">
+                    <input type="hidden" id="statId" value="${isEdit ? stat.id : ''}">
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="statNumber" class="form-label">
+                                <i class="fas fa-hashtag"></i> الرقم
+                            </label>
+                            <input type="text" id="statNumber" class="form-control" 
+                                   value="${isEdit ? stat.number : ''}" required placeholder="مثال: 500+">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="statLabel" class="form-label">
+                                <i class="fas fa-tag"></i> التسمية
+                            </label>
+                            <input type="text" id="statLabel" class="form-control" 
+                                   value="${isEdit ? stat.label : ''}" required placeholder="مثال: عميل راضٍ">
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="showAboutModal('stats')">
+                            <i class="fas fa-arrow-right"></i> رجوع
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> ${isEdit ? 'تحديث' : 'إضافة'}
+                        </button>
+                    </div>
+                </form>
+            `;
+        }
+
+        // تعديل قسم
+        function editSection(section) {
+            showAboutModal(section);
+        }
+
+        // تعديل عنصر
+        function editItem(type, item = null) {
+            showAboutModal(type, item);
+        }
+
+        // إخفاء Modal "من نحن"
+        function hideAboutModal() {
+            document.getElementById('aboutModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            currentEditSection = null;
+            currentEditItem = null;
+        }
+
+        // معالجة تقديم النموذج
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            if (currentEditSection === 'hero') {
+                handleHeroForm();
+            } else if (currentEditSection === 'mission') {
+                handleMissionForm();
+            } else if (currentEditSection === 'team') {
+                handleTeamForm();
+            } else if (currentEditSection === 'values') {
+                handleValueForm();
+            } else if (currentEditSection === 'stats') {
+                handleStatForm();
+            }
+        }
+
+        // معالجة نموذج البطل
+        function handleHeroForm() {
+            aboutData.hero = {
+                title: document.getElementById('heroTitle').value.trim(),
+                tagline: document.getElementById('heroTagline').value.trim(),
+                image: document.getElementById('heroImage').value.trim()
+            };
+            
+            saveAboutData();
+            showNotification('تم تحديث البطل بنجاح', 'success');
+            loadAboutContent();
+            hideAboutModal();
+        }
+
+        // معالجة نموذج الرؤية والرسالة
+        function handleMissionForm() {
+            aboutData.mission = {
+                vision: document.getElementById('vision').value.trim(),
+                mission: document.getElementById('mission').value.trim(),
+                about: document.getElementById('about').value.trim()
+            };
+            
+            saveAboutData();
+            showNotification('تم تحديث الرؤية والرسالة بنجاح', 'success');
+            loadAboutContent();
+            hideAboutModal();
+        }
+
+        // معالجة نموذج الفريق
+        function handleTeamForm() {
+            const memberId = document.getElementById('memberId').value;
+            const memberData = {
+                id: memberId ? parseInt(memberId) : generateId('team'),
+                name: document.getElementById('memberName').value.trim(),
+                position: document.getElementById('memberPosition').value.trim(),
+                bio: document.getElementById('memberBio').value.trim(),
+                image: document.getElementById('memberImage').value.trim() || '1.jpg',
+                social: {
+                    linkedin: document.getElementById('memberLinkedin').value.trim(),
+                    twitter: document.getElementById('memberTwitter').value.trim(),
+                    facebook: document.getElementById('memberFacebook').value.trim()
+                }
+            };
+            
+            if (memberId) {
+                // تحديث عضو موجود
+                const index = aboutData.team.findIndex(m => m.id === parseInt(memberId));
+                if (index !== -1) {
+                    aboutData.team[index] = memberData;
+                }
+            } else {
+                // إضافة عضو جديد
+                aboutData.team.push(memberData);
+            }
+            
+            saveAboutData();
+            showNotification(memberId ? 'تم تحديث العضو بنجاح' : 'تم إضافة العضو بنجاح', 'success');
+            showAboutModal('team');
+        }
+
+        // معالجة نموذج القيمة
+        function handleValueForm() {
+            const valueId = document.getElementById('valueId').value;
+            const valueData = {
+                id: valueId ? parseInt(valueId) : generateId('values'),
+                title: document.getElementById('valueTitle').value.trim(),
+                description: document.getElementById('valueDescription').value.trim()
+            };
+            
+            if (valueId) {
+                // تحديث قيمة موجودة
+                const index = aboutData.values.findIndex(v => v.id === parseInt(valueId));
+                if (index !== -1) {
+                    aboutData.values[index] = valueData;
+                }
+            } else {
+                // إضافة قيمة جديدة
+                aboutData.values.push(valueData);
+            }
+            
+            saveAboutData();
+            showNotification(valueId ? 'تم تحديث القيمة بنجاح' : 'تم إضافة القيمة بنجاح', 'success');
+            showAboutModal('values');
+        }
+
+        // معالجة نموذج الإحصائية
+        function handleStatForm() {
+            const statId = document.getElementById('statId').value;
+            const statData = {
+                id: statId ? parseInt(statId) : generateId('stats'),
+                number: document.getElementById('statNumber').value.trim(),
+                label: document.getElementById('statLabel').value.trim()
+            };
+            
+            if (statId) {
+                // تحديث إحصائية موجودة
+                const index = aboutData.stats.findIndex(s => s.id === parseInt(statId));
+                if (index !== -1) {
+                    aboutData.stats[index] = statData;
+                }
+            } else {
+                // إضافة إحصائية جديدة
+                aboutData.stats.push(statData);
+            }
+            
+            saveAboutData();
+            showNotification(statId ? 'تم تحديث الإحصائية بنجاح' : 'تم إضافة الإحصائية بنجاح', 'success');
+            showAboutModal('stats');
+        }
+
+        // توليد معرف جديد
+        function generateId(type) {
+            let maxId = 0;
+            
+            if (type === 'team' && aboutData.team.length > 0) {
+                maxId = Math.max(...aboutData.team.map(m => m.id));
+            } else if (type === 'values' && aboutData.values.length > 0) {
+                maxId = Math.max(...aboutData.values.map(v => v.id));
+            } else if (type === 'stats' && aboutData.stats.length > 0) {
+                maxId = Math.max(...aboutData.stats.map(s => s.id));
+            }
+            
+            return maxId + 1;
+        }
+
+        // حفظ بيانات "من نحن"
+        function saveAboutData() {
+            localStorage.setItem('aboutData', JSON.stringify(aboutData));
+        }
+
+        // عرض Modal الحذف
+        function showDeleteModal(type, id, item) {
+            deleteType = type;
+            deleteId = id;
+            
+            let message = '';
+            if (type === 'team') {
+                message = `هل أنت متأكد من حذف العضو "${item.name}"؟`;
+            } else if (type === 'values') {
+                message = `هل أنت متأكد من حذف القيمة "${item.title}"؟`;
+            } else if (type === 'stats') {
+                message = `هل أنت متأكد من حذف الإحصائية "${item.number} ${item.label}"؟`;
+            }
+            
+            document.getElementById('deleteMessage').textContent = message;
+            document.getElementById('deleteModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // إخفاء Modal الحذف
+        function hideDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            deleteType = null;
+            deleteId = null;
+        }
+
+        // تأكيد الحذف
+        function confirmDelete() {
+            if (deleteType && deleteId) {
+                if (deleteType === 'team') {
+                    aboutData.team = aboutData.team.filter(m => m.id !== deleteId);
+                } else if (deleteType === 'values') {
+                    aboutData.values = aboutData.values.filter(v => v.id !== deleteId);
+                } else if (deleteType === 'stats') {
+                    aboutData.stats = aboutData.stats.filter(s => s.id !== deleteId);
+                }
+                
+                saveAboutData();
+                showNotification('تم الحذف بنجاح', 'success');
+                loadAboutContent();
+                hideDeleteModal();
+                
+                // إعادة تحميل النموذج إذا كان مفتوحاً
+                if (currentEditSection === deleteType) {
+                    showAboutModal(deleteType);
+                }
+            }
+        }
+
+        // عرض إشعار
+        function showNotification(message, type) {
+            // إنشاء عنصر الإشعار
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
+                <button class="close-notification"><i class="fas fa-times"></i></button>
+            `;
+            
+            // التنسيق
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                background-color: ${type === 'success' ? 'rgba(40, 167, 69, 0.9)' : 'rgba(220, 53, 69, 0.9)'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: var(--radius);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                z-index: 3000;
+                animation: slideInLeft 0.3s ease-out;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            `;
+            
+            // إضافة إلى الصفحة
+            document.body.appendChild(notification);
+            
+            // إغلاق الإشعار
+            notification.querySelector('.close-notification').addEventListener('click', () => {
+                notification.style.animation = 'slideOutLeft 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            });
+            
+            // إغلاق تلقائي بعد 5 ثواني
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOutLeft 0.3s ease-out';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 5000);
+            
+            // إضافة أنيميشن
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInLeft {
+                    from {
+                        transform: translateX(-100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+                
+                @keyframes slideOutLeft {
+                    from {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateX(-100%);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // تحميل المحتوى عند الفتح
+        loadAboutContent();
+    </script>
+</body>
+</html>

@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - دوت نت</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #c00a27;
+            --primary-dark: #8a001a;
+            --primary-light: #ff4d6d;
+            --secondary: #000000;
+            --secondary-light: #1a1a1a;
+            --light: #f5f5f5;
+            --text: #333333;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            color: var(--light);
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* الشريط العلوي للوحة التحكم */
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+        }
+
+        .admin-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            text-align: left;
+        }
+
+        .user-name {
+            font-weight: bold;
+        }
+
+        .user-role {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        /* تخطيط لوحة التحكم */
+        .dashboard-layout {
+            display: flex;
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+        }
+
+        /* الشريط الجانبي */
+        .sidebar {
+            width: 250px;
+            background: rgba(30, 30, 30, 0.95);
+            padding: 30px 0;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            position: fixed;
+            right: 0;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+        }
+
+        .menu-title {
+            padding: 15px 25px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu-links {
+            list-style: none;
+        }
+
+        .menu-links li {
+            margin-bottom: 5px;
+        }
+
+        .menu-links a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 25px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            border-right: 3px solid transparent;
+        }
+
+        .menu-links a:hover,
+        .menu-links a.active {
+            background: rgba(192, 10, 39, 0.1);
+            color: white;
+            border-right-color: var(--primary);
+        }
+
+        .menu-links a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* المحتوى الرئيسي */
+        .main-content {
+            flex: 1;
+            margin-right: 250px;
+            padding: 30px;
+        }
+
+        .dashboard-header {
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(192, 10, 39, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #1e7e34 100%);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning) 0%, #e0a800 100%);
+            color: #212529;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #bd2130 100%);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* جدول بيانات الاتصال */
+        .contact-table {
+            background: linear-gradient(135deg, rgba(40, 40, 40, 0.9) 0%, rgba(60, 60, 60, 0.9) 100%);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 30px;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .table-header h2 {
+            font-size: 24px;
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius);
+            color: white;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: rgba(192, 10, 39, 0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: right;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        th {
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        tbody tr {
+            transition: var(--transition);
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .contact-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            font-size: 18px;
+            color: white;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .status-active { background: rgba(40, 167, 69, 0.2); color: var(--success); }
+        .status-inactive { background: rgba(108, 117, 125, 0.2); color: #6c757d; }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        /* الشاشات المنبثقة */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: linear-gradient(135deg, rgba(40, 40, 40, 0.95) 0%, rgba(60, 60, 60, 0.95) 100%);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 24px;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius);
+            color: white;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(192, 10, 39, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .icon-preview {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .selected-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 32px;
+            color: white;
+        }
+
+        .icon-selection {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .icon-option {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .icon-option:hover {
+            background: rgba(192, 10, 39, 0.2);
+            transform: scale(1.1);
+        }
+
+        .icon-option.selected {
+            border-color: var(--primary);
+            background: rgba(192, 10, 39, 0.3);
+        }
+
+        /* رسائل التأكيد */
+        .confirmation-modal {
+            text-align: center;
+            padding: 40px 30px;
+        }
+
+        .confirmation-icon {
+            font-size: 60px;
+            color: var(--danger);
+            margin-bottom: 20px;
+        }
+
+        .confirmation-text h3 {
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .confirmation-text p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 30px;
+        }
+
+        /* تحسينات التجاوب */
+        @media (max-width: 1200px) {
+            .dashboard-layout {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                position: relative;
+                width: 100%;
+                top: 0;
+                height: auto;
+                margin-bottom: 30px;
+            }
+            
+            .main-content {
+                margin-right: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .table-header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .icon-selection {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .modal {
+                width: 95%;
+                max-height: 85vh;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .action-buttons {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .btn-small {
+                width: 100%;
+            }
+            
+            .modal-header, .modal-body, .modal-footer {
+                padding: 20px;
+            }
+            
+            .icon-selection {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- شريط الرأس العلوي -->
+    <header class="admin-header">
+        <div class="container">
+            <nav class="admin-navbar">
+                <a href="#" class="admin-logo">
+                    <i class="fas fa-network-wired"></i>
+                    <span>دوت نت - لوحة التحكم</span>
+                </a>
+                
+                <div class="admin-user">
+                    <div class="user-info">
+                        <div class="user-name">أحمد محمد</div>
+                        <div class="user-role">مدير النظام</div>
+                    </div>
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- تخطيط لوحة التحكم -->
+    <div class="dashboard-layout">
+        <!-- الشريط الجانبي -->
+        <aside class="sidebar">
+            <div class="menu-title">القائمة الرئيسية</div>
+            <ul class="menu-links">
+                <li><a href="dashboard.html" class="active"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="dashboard-messages.html"><i class="fas fa-envelope"></i> رسائل اتصل بنا</a></li>
+                <li><a href="dashboard-services.html"><i class="fas fa-laptop-code"></i> الخدمات</a></li>
+                <li><a href="dashboard-ads.html"><i class="fas fa-bullhorn"></i> الإعلانات</a></li>
+                <li><a href="dashboard-contact.html"><i class="fas fa-address-book"></i> بيانات الاتصال</a></li>
+                <li><a href="users.html"><i class="fas fa-users"></i> المستخدمين</a></li>
+                <li><a href="dashboard-settings.html"><i class="fas fa-cog"></i> الإعدادات</a></li>
+            </ul>
+            
+            <div class="menu-title">حسابات</div>
+            <ul class="menu-links">
+                <li><a href="index.html"><i class="fas fa-globe"></i> زيارة الموقع</a></li>
+                <li><a href="#"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a></li>
+            </ul>
+        </aside>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <div>
+                    <h1>إدارة بيانات الاتصال</h1>
+                    <p>إضافة وتعديل بيانات التواصل الظاهرة في صفحة اتصل بنا</p>
+                </div>
+                <button class="btn" onclick="openAddModal()">
+                    <i class="fas fa-plus"></i> إضافة بيانات اتصال جديدة
+                </button>
+            </div>
+
+            <!-- جدول بيانات الاتصال -->
+            <div class="contact-table">
+                <div class="table-header">
+                    <h2>بيانات الاتصال الحالية</h2>
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="بحث في بيانات الاتصال...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th width="80">الأيقونة</th>
+                                <th>النوع</th>
+                                <th>العنوان</th>
+                                <th>القيمة</th>
+                                <th>الوصف</th>
+                                <th width="100">الحالة</th>
+                                <th width="150">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="contactsTableBody">
+                            <!-- سيتم ملء الجدول بالبيانات من JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- الشاشات المنبثقة -->
+
+    <!-- شاشة إضافة بيانات اتصال جديدة -->
+    <div class="modal-overlay" id="addModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>إضافة بيانات اتصال جديدة</h2>
+                <button class="modal-close" onclick="closeModal('addModal')">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="addContactForm">
+                    <div class="icon-preview">
+                        <div class="selected-icon" id="selectedIconPreview">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <p>اختر الأيقونة المناسبة</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>اختر الأيقونة:</label>
+                        <div class="icon-selection" id="iconSelection">
+                            <!-- سيتم ملء الأيقونات من JavaScript -->
+                        </div>
+                        <input type="hidden" id="selectedIcon" value="fas fa-map-marker-alt">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="addType">نوع الاتصال:</label>
+                            <select id="addType" class="form-control" required>
+                                <option value="">اختر النوع</option>
+                                <option value="address">العنوان</option>
+                                <option value="phone">الهاتف</option>
+                                <option value="email">البريد الإلكتروني</option>
+                                <option value="hours">ساعات العمل</option>
+                                <option value="whatsapp">واتساب</option>
+                                <option value="social">وسائل التواصل</option>
+                                <option value="other">أخرى</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="addTitle">العنوان:</label>
+                            <input type="text" id="addTitle" class="form-control" required placeholder="مثال: العنوان الرئيسي">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="addValue">القيمة/المحتوى:</label>
+                            <input type="text" id="addValue" class="form-control" required placeholder="مثال: الرياض، المملكة العربية السعودية">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="addStatus">الحالة:</label>
+                            <select id="addStatus" class="form-control" required>
+                                <option value="active">نشط</option>
+                                <option value="inactive">غير نشط</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="addDescription">الوصف (اختياري):</label>
+                        <textarea id="addDescription" class="form-control" rows="3" placeholder="وصف إضافي للبيانات..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="addOrder">ترتيب العرض:</label>
+                        <input type="number" id="addOrder" class="form-control" min="1" max="10" value="1">
+                        <small style="color: rgba(255,255,255,0.6);">رقم يحدد ترتيب ظهور البيانات في القائمة (1-10)</small>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-success" onclick="saveNewContact()">
+                    <i class="fas fa-save"></i> حفظ البيانات
+                </button>
+                <button class="btn btn-outline" onclick="closeModal('addModal')">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- شاشة تعديل بيانات الاتصال -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>تعديل بيانات الاتصال</h2>
+                <button class="modal-close" onclick="closeModal('editModal')">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <form id="editContactForm">
+                    <input type="hidden" id="editContactId">
+                    
+                    <div class="icon-preview">
+                        <div class="selected-icon" id="editIconPreview">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <p>تغيير الأيقونة</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>اختر الأيقونة:</label>
+                        <div class="icon-selection" id="editIconSelection">
+                            <!-- سيتم ملء الأيقونات من JavaScript -->
+                        </div>
+                        <input type="hidden" id="editSelectedIcon" value="fas fa-map-marker-alt">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editType">نوع الاتصال:</label>
+                            <select id="editType" class="form-control" required>
+                                <option value="">اختر النوع</option>
+                                <option value="address">العنوان</option>
+                                <option value="phone">الهاتف</option>
+                                <option value="email">البريد الإلكتروني</option>
+                                <option value="hours">ساعات العمل</option>
+                                <option value="whatsapp">واتساب</option>
+                                <option value="social">وسائل التواصل</option>
+                                <option value="other">أخرى</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editTitle">العنوان:</label>
+                            <input type="text" id="editTitle" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editValue">القيمة/المحتوى:</label>
+                            <input type="text" id="editValue" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editStatus">الحالة:</label>
+                            <select id="editStatus" class="form-control" required>
+                                <option value="active">نشط</option>
+                                <option value="inactive">غير نشط</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editDescription">الوصف (اختياري):</label>
+                        <textarea id="editDescription" class="form-control" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editOrder">ترتيب العرض:</label>
+                        <input type="number" id="editOrder" class="form-control" min="1" max="10">
+                        <small style="color: rgba(255,255,255,0.6);">رقم يحدد ترتيب ظهور البيانات في القائمة (1-10)</small>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-success" onclick="saveEditContact()">
+                    <i class="fas fa-save"></i> حفظ التعديلات
+                </button>
+                <button class="btn btn-danger" onclick="openDeleteModal()">
+                    <i class="fas fa-trash"></i> حذف
+                </button>
+                <button class="btn btn-outline" onclick="closeModal('editModal')">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- شاشة تأكيد الحذف -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>تأكيد الحذف</h2>
+                <button class="modal-close" onclick="closeModal('deleteModal')">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="confirmation-modal">
+                    <div class="confirmation-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="confirmation-text">
+                        <h3>هل أنت متأكد من حذف بيانات الاتصال هذه؟</h3>
+                        <p>هذا الإجراء لا يمكن التراجع عنه. سيتم حذف بيانات الاتصال بشكل دائم ولن تظهر في صفحة اتصل بنا.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-danger" onclick="confirmDelete()">
+                    <i class="fas fa-trash"></i> نعم، احذف
+                </button>
+                <button class="btn btn-outline" onclick="closeModal('deleteModal')">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات تجريبية لبيانات الاتصال
+        let contactData = [
+            {
+                id: 1,
+                icon: "fas fa-map-marker-alt",
+                type: "address",
+                title: "العنوان الرئيسي",
+                value: "الرياض، المملكة العربية السعودية",
+                description: "المقر الرئيسي للشركة",
+                status: "active",
+                order: 1
+            },
+            {
+                id: 2,
+                icon: "fas fa-phone",
+                type: "phone",
+                title: "الهاتف",
+                value: "+966 11 234 5678",
+                description: "رقم الهاتف الرئيسي",
+                status: "active",
+                order: 2
+            },
+            {
+                id: 3,
+                icon: "fas fa-envelope",
+                type: "email",
+                title: "البريد الإلكتروني",
+                value: "info@dotnet.com",
+                description: "البريد الرسمي للشركة",
+                status: "active",
+                order: 3
+            },
+            {
+                id: 4,
+                icon: "fas fa-clock",
+                type: "hours",
+                title: "ساعات العمل",
+                value: "الأحد - الخميس: 8 صباحاً - 5 مساءً",
+                description: "أوقات الدوام الرسمي",
+                status: "active",
+                order: 4
+            },
+            {
+                id: 5,
+                icon: "fab fa-whatsapp",
+                type: "whatsapp",
+                title: "واتساب",
+                value: "+966 50 123 4567",
+                description: "للتواصل عبر واتساب",
+                status: "inactive",
+                order: 5
+            }
+        ];
+
+        let currentContactId = null;
+        let availableIcons = [
+            "fas fa-map-marker-alt", "fas fa-phone", "fas fa-envelope", "fas fa-clock",
+            "fab fa-whatsapp", "fab fa-facebook", "fab fa-twitter", "fab fa-linkedin",
+            "fab fa-instagram", "fas fa-globe", "fas fa-building", "fas fa-home",
+            "fas fa-mobile-alt", "fas fa-fax", "fas fa-user", "fas fa-headset"
+        ];
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadContactData();
+            setupEventListeners();
+            initIconSelections();
+        });
+
+        // تحميل بيانات الاتصال في الجدول
+        function loadContactData() {
+            const tbody = document.getElementById('contactsTableBody');
+            tbody.innerHTML = '';
+            
+            // ترتيب البيانات حسب الترتيب
+            const sortedData = [...contactData].sort((a, b) => a.order - b.order);
+            
+            sortedData.forEach(contact => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="contact-icon">
+                            <i class="${contact.icon}"></i>
+                        </div>
+                    </td>
+                    <td>${getTypeText(contact.type)}</td>
+                    <td>${contact.title}</td>
+                    <td>${contact.value}</td>
+                    <td>${contact.description || '-'}</td>
+                    <td>
+                        <span class="status-badge status-${contact.status}">
+                            ${contact.status === 'active' ? 'نشط' : 'غير نشط'}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-small btn-warning" onclick="openEditModal(${contact.id})">
+                                <i class="fas fa-edit"></i> تعديل
+                            </button>
+                            <button class="btn btn-small btn-danger" onclick="openDeleteConfirmation(${contact.id})">
+                                <i class="fas fa-trash"></i> حذف
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // الحصول على نص النوع
+        function getTypeText(type) {
+            const typeMap = {
+                'address': 'العنوان',
+                'phone': 'الهاتف',
+                'email': 'البريد الإلكتروني',
+                'hours': 'ساعات العمل',
+                'whatsapp': 'واتساب',
+                'social': 'وسائل التواصل',
+                'other': 'أخرى'
+            };
+            return typeMap[type] || type;
+        }
+
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // البحث
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                searchContacts(e.target.value);
+            });
+        }
+
+        // تهيئة اختيار الأيقونات
+        function initIconSelections() {
+            const addIconSelection = document.getElementById('iconSelection');
+            const editIconSelection = document.getElementById('editIconSelection');
+            
+            availableIcons.forEach(iconClass => {
+                // للأيقونات في شاشة الإضافة
+                const addIconOption = document.createElement('div');
+                addIconOption.className = 'icon-option';
+                addIconOption.innerHTML = `<i class="${iconClass}"></i>`;
+                addIconOption.addEventListener('click', () => selectIcon(iconClass, 'add'));
+                addIconSelection.appendChild(addIconOption);
+                
+                // للأيقونات في شاشة التعديل
+                const editIconOption = document.createElement('div');
+                editIconOption.className = 'icon-option';
+                editIconOption.innerHTML = `<i class="${iconClass}"></i>`;
+                editIconOption.addEventListener('click', () => selectIcon(iconClass, 'edit'));
+                editIconSelection.appendChild(editIconOption);
+            });
+        }
+
+        // اختيار أيقونة
+        function selectIcon(iconClass, mode) {
+            const iconPreview = mode === 'add' ? 
+                document.getElementById('selectedIconPreview') : 
+                document.getElementById('editIconPreview');
+            
+            const selectedIconInput = mode === 'add' ? 
+                document.getElementById('selectedIcon') : 
+                document.getElementById('editSelectedIcon');
+            
+            const iconSelection = mode === 'add' ? 
+                document.getElementById('iconSelection') : 
+                document.getElementById('editIconSelection');
+            
+            // تحديث الأيقونة المختارة
+            iconPreview.innerHTML = `<i class="${iconClass}"></i>`;
+            selectedIconInput.value = iconClass;
+            
+            // تحديث التحديد البصري
+            const iconOptions = iconSelection.querySelectorAll('.icon-option');
+            iconOptions.forEach(option => {
+                const optionIcon = option.querySelector('i').className;
+                option.classList.remove('selected');
+                if (optionIcon === iconClass) {
+                    option.classList.add('selected');
+                }
+            });
+        }
+
+        // فتح شاشة إضافة بيانات اتصال جديدة
+        function openAddModal() {
+            // تفريغ النموذج
+            document.getElementById('addContactForm').reset();
+            
+            // إعادة تعيين الأيقونة الافتراضية
+            selectIcon('fas fa-map-marker-alt', 'add');
+            
+            // إعادة تعيين الحقول
+            document.getElementById('addOrder').value = contactData.length + 1;
+            document.getElementById('addStatus').value = 'active';
+            
+            openModal('addModal');
+        }
+
+        // حفظ بيانات الاتصال الجديدة
+        function saveNewContact() {
+            const icon = document.getElementById('selectedIcon').value;
+            const type = document.getElementById('addType').value;
+            const title = document.getElementById('addTitle').value;
+            const value = document.getElementById('addValue').value;
+            const description = document.getElementById('addDescription').value;
+            const status = document.getElementById('addStatus').value;
+            const order = parseInt(document.getElementById('addOrder').value) || 1;
+            
+            // التحقق من البيانات
+            if (!type || !title || !value) {
+                alert('يرجى ملء جميع الحقول المطلوبة!');
+                return;
+            }
+            
+            const newContact = {
+                id: contactData.length > 0 ? Math.max(...contactData.map(c => c.id)) + 1 : 1,
+                icon: icon,
+                type: type,
+                title: title,
+                value: value,
+                description: description,
+                status: status,
+                order: order
+            };
+            
+            contactData.push(newContact);
+            
+            // إعادة تحميل الجدول
+            loadContactData();
+            
+            // إغلاق الشاشة المنبثقة
+            closeModal('addModal');
+            
+            // إظهار رسالة النجاح
+            alert('تم إضافة بيانات الاتصال بنجاح!');
+        }
+
+        // فتح شاشة تعديل بيانات الاتصال
+        function openEditModal(id) {
+            const contact = contactData.find(c => c.id === id);
+            if (!contact) return;
+            
+            currentContactId = id;
+            
+            // تعبئة البيانات في النموذج
+            document.getElementById('editContactId').value = contact.id;
+            document.getElementById('editType').value = contact.type;
+            document.getElementById('editTitle').value = contact.title;
+            document.getElementById('editValue').value = contact.value;
+            document.getElementById('editDescription').value = contact.description || '';
+            document.getElementById('editStatus').value = contact.status;
+            document.getElementById('editOrder').value = contact.order;
+            
+            // تحديد الأيقونة
+            selectIcon(contact.icon, 'edit');
+            
+            openModal('editModal');
+        }
+
+        // حفظ التعديلات
+        function saveEditContact() {
+            const id = parseInt(document.getElementById('editContactId').value);
+            const index = contactData.findIndex(c => c.id === id);
+            
+            if (index === -1) return;
+            
+            const updatedContact = {
+                ...contactData[index],
+                icon: document.getElementById('editSelectedIcon').value,
+                type: document.getElementById('editType').value,
+                title: document.getElementById('editTitle').value,
+                value: document.getElementById('editValue').value,
+                description: document.getElementById('editDescription').value,
+                status: document.getElementById('editStatus').value,
+                order: parseInt(document.getElementById('editOrder').value) || 1
+            };
+            
+            // التحقق من البيانات
+            if (!updatedContact.type || !updatedContact.title || !updatedContact.value) {
+                alert('يرجى ملء جميع الحقول المطلوبة!');
+                return;
+            }
+            
+            contactData[index] = updatedContact;
+            
+            // إعادة تحميل الجدول
+            loadContactData();
+            
+            // إغلاق الشاشة المنبثقة
+            closeModal('editModal');
+            
+            // إظهار رسالة النجاح
+            alert('تم حفظ التعديلات بنجاح!');
+        }
+
+        // فتح شاشة تأكيد الحذف
+        function openDeleteConfirmation(id) {
+            currentContactId = id;
+            openModal('deleteModal');
+        }
+
+        // فتح شاشة حذف من شاشة التعديل
+        function openDeleteModal() {
+            closeModal('editModal');
+            openModal('deleteModal');
+        }
+
+        // تأكيد الحذف
+        function confirmDelete() {
+            const index = contactData.findIndex(c => c.id === currentContactId);
+            
+            if (index !== -1) {
+                const contactTitle = contactData[index].title;
+                contactData.splice(index, 1);
+                
+                // إعادة تحميل الجدول
+                loadContactData();
+                
+                // إغلاق الشاشة المنبثقة
+                closeModal('deleteModal');
+                
+                // إظهار رسالة النجاح
+                alert(`تم حذف بيانات الاتصال "${contactTitle}" بنجاح!`);
+            }
+        }
+
+        // البحث في بيانات الاتصال
+        function searchContacts(query) {
+            const rows = document.querySelectorAll('#contactsTableBody tr');
+            const searchTerm = query.toLowerCase();
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        // فتح الشاشة المنبثقة
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden'; // منع التمرير في الخلفية
+        }
+
+        // إغلاق الشاشة المنبثقة
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = 'auto'; // إعادة التمرير
+        }
+
+        // النقر خارج الشاشة المنبثقة لإغلاقها
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    const modalId = this.id;
+                    closeModal(modalId);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

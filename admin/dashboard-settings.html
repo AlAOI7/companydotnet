@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الإعدادات - لوحة التحكم</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #c00a27;
+            --primary-dark: #8a001a;
+            --primary-light: #ff4d6d;
+            --secondary: #000000;
+            --secondary-light: #1a1a1a;
+            --light: #f5f5f5;
+            --text: #333333;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            color: var(--light);
+            line-height: 1.7;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* الفقاعات المتحركة */
+        .bubbles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), rgba(192, 10, 39, 0.05));
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.05),
+                        0 0 20px rgba(192, 10, 39, 0.1);
+            animation: floatBubble linear infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes floatBubble {
+            0% {
+                transform: translateY(100vh) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translateY(-100px) translateX(var(--bubble-x-end)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* الشريط العلوي للوحة التحكم */
+        .admin-header {
+            background: linear-gradient(135deg, rgba(192, 10, 39, 0.9) 0%, rgba(138, 0, 26, 0.9) 100%);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            text-align: left;
+        }
+
+        .user-name {
+            font-weight: bold;
+        }
+
+        .user-role {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* تخطيط لوحة التحكم */
+        .dashboard-layout {
+            display: flex;
+            margin-top: 80px;
+            min-height: calc(100vh - 80px);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* الشريط الجانبي */
+        .sidebar {
+            width: 250px;
+            background: rgba(30, 30, 30, 0.95);
+            padding: 30px 0;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            position: fixed;
+            right: 0;
+            top: 80px;
+            height: calc(100vh - 80px);
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .menu-title {
+            padding: 15px 25px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu-links {
+            list-style: none;
+        }
+
+        .menu-links li {
+            margin-bottom: 5px;
+            opacity: 0;
+            animation: slideInRight 0.5s forwards;
+        }
+
+        .menu-links li:nth-child(1) { animation-delay: 0.1s; }
+        .menu-links li:nth-child(2) { animation-delay: 0.2s; }
+        .menu-links li:nth-child(3) { animation-delay: 0.3s; }
+        .menu-links li:nth-child(4) { animation-delay: 0.4s; }
+        .menu-links li:nth-child(5) { animation-delay: 0.5s; }
+        .menu-links li:nth-child(6) { animation-delay: 0.6s; }
+        .menu-links li:nth-child(7) { animation-delay: 0.7s; }
+        .menu-links li:nth-child(8) { animation-delay: 0.8s; }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .menu-links a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 25px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            border-right: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .menu-links a:hover::before {
+            right: 100%;
+        }
+
+        .menu-links a:hover,
+        .menu-links a.active {
+            background: rgba(192, 10, 39, 0.1);
+            color: white;
+            border-right-color: var(--primary);
+            transform: translateX(-5px);
+        }
+
+        .menu-links a i {
+            width: 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+
+        /* المحتوى الرئيسي */
+        .main-content {
+            flex: 1;
+            margin-right: 250px;
+            padding: 30px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .dashboard-header {
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dashboard-header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, #ffd700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(192, 10, 39, 0.3);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 14px 28px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            font-weight: bold;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(192, 10, 39, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #1e7e34 100%);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning) 0%, #e0a800 100%);
+            color: #212529;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger) 0%, #bd2130 100%);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* إحصائيات */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(40, 40, 40, 0.8) 0%, rgba(60, 60, 60, 0.8) 100%);
+            border-radius: var(--radius);
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+            animation: float 6s ease-in-out infinite;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0s; }
+        .stat-card:nth-child(2) { animation-delay: 1s; }
+        .stat-card:nth-child(3) { animation-delay: 2s; }
+        .stat-card:nth-child(4) { animation-delay: 3s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotateX(0); }
+            50% { transform: translateY(-10px) rotateX(5deg); }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) rotateX(10deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 0 30px rgba(192, 10, 39, 0.2);
+            border-color: var(--primary);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin-bottom: 20px;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .stat-icon.general { background: linear-gradient(135deg, var(--info) 0%, #117a8b 100%); }
+        .stat-icon.site { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); }
+        .stat-icon.security { background: linear-gradient(135deg, var(--success) 0%, #1e7e34 100%); }
+        .stat-icon.email { background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%); }
+
+        .stat-info h3 {
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        /* قسم الإعدادات */
+        .settings-container {
+            background: linear-gradient(135deg, rgba(40, 40, 40, 0.8) 0%, rgba(60, 60, 60, 0.8) 100%);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            margin-top: 30px;
+        }
+
+        .settings-tabs {
+            display: flex;
+            background: rgba(192, 10, 39, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            padding: 20px 30px;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(to left, var(--primary), #ffd700);
+            transition: width 0.3s ease;
+        }
+
+        .tab-btn:hover::after {
+            width: 100%;
+            right: auto;
+            left: 0;
+        }
+
+        .tab-btn:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-btn.active {
+            color: white;
+            border-bottom-color: var(--primary);
+            background: rgba(192, 10, 39, 0.2);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 40px;
+            animation: fadeInUp 0.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .settings-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: var(--transition);
+        }
+
+        .settings-section:hover {
+            border-color: rgba(192, 10, 39, 0.3);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .settings-section h3 {
+            font-size: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius);
+            color: white;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(192, 10, 39, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            margin-left: 15px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: var(--transition);
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.active {
+            border-color: white;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .color-primary { background: #c00a27; }
+        .color-blue { background: #1e88e5; }
+        .color-green { background: #43a047; }
+        .color-purple { background: #8e24aa; }
+        .color-dark { background: #121212; }
+
+        /* الشاشات المنبثقة */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal {
+            background: linear-gradient(135deg, rgba(40, 40, 40, 0.95) 0%, rgba(60, 60, 60, 0.95) 100%);
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 50px rgba(192, 10, 39, 0.3);
+            animation: modalAppear 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        @keyframes modalAppear {
+            0% {
+                opacity: 0;
+                transform: translateY(50px) rotateX(-20deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, rgba(192, 10, 39, 0.2) 0%, rgba(0, 0, 0, 0.2) 100%);
+        }
+
+        .modal-header h2 {
+            font-size: 28px;
+            margin: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, #ffd700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 28px;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        /* ثلاثي الأبعاد للشاشات المنبثقة */
+        .modal-3d-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            margin: 40px auto;
+            perspective: 1000px;
+        }
+
+        .modal-cube {
+            width: 200px;
+            height: 200px;
+            position: relative;
+            margin: 50px auto;
+            transform-style: preserve-3d;
+            animation: rotateModalCube 20s infinite linear;
+        }
+
+        @keyframes rotateModalCube {
+            0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
+            100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+        }
+
+        .modal-face {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 30px rgba(192, 10, 39, 0.5);
+            opacity: 0.9;
+            border-radius: 15px;
+        }
+
+        .modal-front { transform: translateZ(100px); }
+        .modal-back { transform: rotateY(180deg) translateZ(100px); }
+        .modal-right { transform: rotateY(90deg) translateZ(100px); }
+        .modal-left { transform: rotateY(-90deg) translateZ(100px); }
+        .modal-top { transform: rotateX(90deg) translateZ(100px); }
+        .modal-bottom { transform: rotateX(-90deg) translateZ(100px); }
+
+        /* رسائل التأكيد */
+        .confirmation-modal {
+            text-align: center;
+            padding: 40px 30px;
+        }
+
+        .confirmation-icon {
+            font-size: 80px;
+            color: var(--primary);
+            margin-bottom: 25px;
+            animation: pulse 2s infinite;
+            filter: drop-shadow(0 0 10px rgba(192, 10, 39, 0.5));
+        }
+
+        .confirmation-text h3 {
+            margin-bottom: 20px;
+            color: white;
+            font-size: 24px;
+        }
+
+        .confirmation-text p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 30px;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* تحسينات التجاوب */
+        @media (max-width: 1200px) {
+            .dashboard-layout {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                position: relative;
+                width: 100%;
+                top: 0;
+                height: auto;
+                margin-bottom: 30px;
+            }
+            
+            .main-content {
+                margin-right: 0;
+            }
+            
+            .modal-3d-container {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .modal-cube {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .modal-face {
+                width: 150px;
+                height: 150px;
+                font-size: 20px;
+            }
+            
+            .modal-front { transform: translateZ(75px); }
+            .modal-back { transform: rotateY(180deg) translateZ(75px); }
+            .modal-right { transform: rotateY(90deg) translateZ(75px); }
+            .modal-left { transform: rotateY(-90deg) translateZ(75px); }
+            .modal-top { transform: rotateX(90deg) translateZ(75px); }
+            .modal-bottom { transform: rotateX(-90deg) translateZ(75px); }
+        }
+
+        @media (max-width: 992px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .settings-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab-btn {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal {
+                width: 95%;
+                max-height: 85vh;
+            }
+            
+            .modal-header, .modal-body, .modal-footer {
+                padding: 20px;
+            }
+            
+            .modal-3d-container {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .modal-cube {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .modal-face {
+                width: 120px;
+                height: 120px;
+                font-size: 18px;
+            }
+            
+            .modal-front { transform: translateZ(60px); }
+            .modal-back { transform: rotateY(180deg) translateZ(60px); }
+            .modal-right { transform: rotateY(90deg) translateZ(60px); }
+            .modal-left { transform: rotateY(-90deg) translateZ(60px); }
+            .modal-top { transform: rotateX(90deg) translateZ(60px); }
+            .modal-bottom { transform: rotateX(-90deg) translateZ(60px); }
+        }
+
+        @media (max-width: 576px) {
+            .tab-content {
+                padding: 20px;
+            }
+            
+            .settings-section {
+                padding: 20px;
+            }
+            
+            .modal-header h2 {
+                font-size: 22px;
+            }
+            
+            .confirmation-text h3 {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- الفقاعات المتحركة -->
+    <div class="bubbles-container" id="bubbles"></div>
+
+    <!-- شريط الرأس العلوي -->
+    <header class="admin-header">
+        <div class="container">
+            <nav class="admin-navbar">
+                <a href="dashboard.html" class="admin-logo">
+                    <i class="fas fa-network-wired"></i>
+                    <span>دوت نت - لوحة التحكم</span>
+                </a>
+                
+                <div class="admin-user">
+                    <div class="user-info">
+                        <div class="user-name">أحمد محمد</div>
+                        <div class="user-role">مدير النظام</div>
+                    </div>
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- تخطيط لوحة التحكم -->
+    <div class="dashboard-layout">
+        <!-- الشريط الجانبي -->
+        <aside class="sidebar">
+            <div class="menu-title">القائمة الرئيسية</div>
+            <ul class="menu-links">
+                <li><a href="dashboard.html"><i class="fas fa-home"></i> الرئيسية</a></li>
+                <li><a href="dashboard-messages.html"><i class="fas fa-envelope"></i> رسائل اتصل بنا</a></li>
+                <li><a href="dashboard-services-requests.html"><i class="fas fa-tasks"></i> طلبات الخدمات</a></li>
+                <li><a href="dashboard-services.html"><i class="fas fa-laptop-code"></i> الخدمات</a></li>
+                <li><a href="dashboard-ads.html"><i class="fas fa-bullhorn"></i> الإعلانات</a></li>
+                <li><a href="dashboard-contact.html"><i class="fas fa-address-book"></i> بيانات الاتصال</a></li>
+                <li><a href="dashboard-users.html"><i class="fas fa-users"></i> المستخدمين</a></li>
+                <li><a href="dashboard-settings.html" class="active"><i class="fas fa-cog"></i> الإعدادات</a></li>
+            </ul>
+            
+            <div class="menu-title">حسابات</div>
+            <ul class="menu-links">
+                <li><a href="index.html"><i class="fas fa-globe"></i> زيارة الموقع</a></li>
+                <li><a href="#"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a></li>
+            </ul>
+        </aside>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <div>
+                    <h1>إعدادات النظام</h1>
+                    <p>إدارة وتخصيص إعدادات لوحة التحكم والموقع</p>
+                </div>
+                <button class="btn" onclick="openAdvancedSettings()">
+                    <i class="fas fa-sliders-h"></i> الإعدادات المتقدمة
+                </button>
+            </div>
+
+            <!-- إحصائيات الإعدادات -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon general">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>الإعدادات العامة</h3>
+                        <div class="stat-number" id="generalCount">12</div>
+                        <p>إعدادات نشطة</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon site">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>إعدادات الموقع</h3>
+                        <div class="stat-number" id="siteCount">8</div>
+                        <p>تخصيصات الموقع</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon security">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>إعدادات الأمان</h3>
+                        <div class="stat-number" id="securityCount">6</div>
+                        <p>مستويات حماية</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon email">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3>إعدادات البريد</h3>
+                        <div class="stat-number" id="emailCount">4</div>
+                        <p>إعدادات الاتصال</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- إعدادات النظام -->
+            <div class="settings-container">
+                <div class="settings-tabs">
+                    <button class="tab-btn active" data-tab="general">
+                        <i class="fas fa-cogs"></i> عامة
+                    </button>
+                    <button class="tab-btn" data-tab="site">
+                        <i class="fas fa-globe"></i> الموقع
+                    </button>
+                    <button class="tab-btn" data-tab="security">
+                        <i class="fas fa-shield-alt"></i> الأمان
+                    </button>
+                    <button class="tab-btn" data-tab="email">
+                        <i class="fas fa-envelope"></i> البريد
+                    </button>
+                    <button class="tab-btn" data-tab="backup">
+                        <i class="fas fa-database"></i> النسخ الاحتياطي
+                    </button>
+                    <button class="tab-btn" data-tab="api">
+                        <i class="fas fa-code"></i> API
+                    </button>
+                </div>
+                
+                <div class="tab-content active" id="general-tab">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-info-circle"></i> معلومات النظام</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="systemName">اسم النظام</label>
+                                <input type="text" id="systemName" class="form-control" value="دوت نت - لوحة التحكم">
+                            </div>
+                            <div class="form-group">
+                                <label for="systemVersion">إصدار النظام</label>
+                                <input type="text" id="systemVersion" class="form-control" value="v2.5.1">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="timezone">المنطقة الزمنية</label>
+                                <select id="timezone" class="form-control">
+                                    <option value="+3">الرياض (UTC+3)</option>
+                                    <option value="+4">دبي (UTC+4)</option>
+                                    <option value="+2">القاهرة (UTC+2)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="language">اللغة الافتراضية</label>
+                                <select id="language" class="form-control">
+                                    <option value="ar" selected>العربية</option>
+                                    <option value="en">الإنجليزية</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3><i class="fas fa-tachometer-alt"></i> إعدادات الأداء</h3>
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-bolt"></i> وضع التخزين المؤقت
+                                <div class="switch">
+                                    <input type="checkbox" id="cacheEnabled" checked>
+                                    <span class="slider"></span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="cacheDuration">مدة التخزين المؤقت (ساعة)</label>
+                            <input type="number" id="cacheDuration" class="form-control" value="24" min="1" max="168">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="site-tab">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-palette"></i> التخصيص البصري</h3>
+                        <div class="form-group">
+                            <label for="siteTitle">عنوان الموقع</label>
+                            <input type="text" id="siteTitle" class="form-control" value="دوت نت - شريكك في التحول الرقمي">
+                        </div>
+                        <div class="form-group">
+                            <label for="siteDescription">وصف الموقع</label>
+                            <textarea id="siteDescription" class="form-control" rows="3">نقدم حلولاً تقنية مبتكرة تساعد عملك على النمو والازدهار في العصر الرقمي</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>لون السمة الرئيسية</label>
+                            <div class="color-picker">
+                                <div class="color-option color-primary active" data-color="#c00a27"></div>
+                                <div class="color-option color-blue" data-color="#1e88e5"></div>
+                                <div class="color-option color-green" data-color="#43a047"></div>
+                                <div class="color-option color-purple" data-color="#8e24aa"></div>
+                                <div class="color-option color-dark" data-color="#121212"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3><i class="fas fa-search"></i> تحسين محركات البحث</h3>
+                        <div class="form-group">
+                            <label for="seoKeywords">الكلمات المفتاحية</label>
+                            <textarea id="seoKeywords" class="form-control" rows="2" placeholder="أدخل الكلمات المفتاحية مفصولة بفاصلة">تطوير مواقع, تطبيقات جوال, تسويق رقمي, أنظمة ERP, حلول تقنية</textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="security-tab">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-lock"></i> إعدادات الأمان</h3>
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-shield-alt"></i> تفعيل الحماية من الهجمات
+                                <div class="switch">
+                                    <input type="checkbox" id="securityEnabled" checked>
+                                    <span class="slider"></span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="maxLoginAttempts">أقصى محاولات تسجيل دخول</label>
+                            <input type="number" id="maxLoginAttempts" class="form-control" value="5" min="1" max="10">
+                        </div>
+                        <div class="form-group">
+                            <label for="sessionTimeout">مهلة الجلسة (دقيقة)</label>
+                            <input type="number" id="sessionTimeout" class="form-control" value="30" min="5" max="240">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="email-tab">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-envelope"></i> إعدادات البريد الإلكتروني</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="smtpHost">SMTP Host</label>
+                                <input type="text" id="smtpHost" class="form-control" value="smtp.gmail.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="smtpPort">SMTP Port</label>
+                                <input type="number" id="smtpPort" class="form-control" value="587">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="smtpUser">اسم المستخدم</label>
+                                <input type="text" id="smtpUser" class="form-control" value="info@dotnet.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="smtpPass">كلمة المرور</label>
+                                <input type="password" id="smtpPass" class="form-control" value="********">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="backup-tab">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-database"></i> النسخ الاحتياطي</h3>
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-history"></i> النسخ التلقائي
+                                <div class="switch">
+                                    <input type="checkbox" id="autoBackup" checked>
+                                    <span class="slider"></span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="backupFrequency">تكرار النسخ</label>
+                                <select id="backupFrequency" class="form-control">
+                                    <option value="daily">يومياً</option>
+                                    <option value="weekly" selected>أسبوعياً</option>
+                                    <option value="monthly">شهرياً</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="backupRetention">فترة الاحتفاظ (أيام)</label>
+                                <input type="number" id="backupRetention" class="form-control" value="30" min="1" max="365">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="api-tab">
+                    <div class="settings-section">
+                        <h3><i class="fas fa-code"></i> إعدادات API</h3>
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-plug"></i> تفعيل واجهة API
+                                <div class="switch">
+                                    <input type="checkbox" id="apiEnabled" checked>
+                                    <span class="slider"></span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="apiKey">مفتاح API</label>
+                            <input type="text" id="apiKey" class="form-control" value="dotnet_ap1_k3y_2023_secr3t" readonly>
+                            <button class="btn btn-small" onclick="generateApiKey()" style="margin-top: 10px;">
+                                <i class="fas fa-sync-alt"></i> إنشاء مفتاح جديد
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- الشاشات المنبثقة -->
+
+    <!-- شاشة الإعدادات المتقدمة -->
+    <div class="modal-overlay" id="advancedSettingsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>الإعدادات المتقدمة</h2>
+                <button class="modal-close" onclick="closeModal('advancedSettingsModal')">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="modal-3d-container">
+                    <div class="modal-cube">
+                        <div class="modal-front"><i class="fas fa-cogs"></i></div>
+                        <div class="modal-back"><i class="fas fa-sliders-h"></i></div>
+                        <div class="modal-right"><i class="fas fa-tools"></i></div>
+                        <div class="modal-left"><i class="fas fa-wrench"></i></div>
+                        <div class="modal-top"><i class="fas fa-bolt"></i></div>
+                        <div class="modal-bottom"><i class="fas fa-microchip"></i></div>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3><i class="fas fa-bolt"></i> إعدادات الأداء المتقدمة</h3>
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-compress-arrows-alt"></i> ضغط GZIP
+                            <div class="switch">
+                                <input type="checkbox" id="gzipEnabled" checked>
+                                <span class="slider"></span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-file-image"></i> تحسين الصور تلقائياً
+                            <div class="switch">
+                                <input type="checkbox" id="imageOptimization" checked>
+                                <span class="slider"></span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="queryCache">ذاكرة التخزين المؤقت للاستعلامات (MB)</label>
+                        <input type="range" id="queryCache" class="form-control" min="64" max="512" value="256">
+                        <span id="queryCacheValue">256 MB</span>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3><i class="fas fa-shield-alt"></i> الأمان المتقدم</h3>
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-fingerprint"></i> المصادقة الثنائية
+                            <div class="switch">
+                                <input type="checkbox" id="twoFactorAuth">
+                                <span class="slider"></span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-ban"></i> حظر IP بعد فشل متكرر
+                            <div class="switch">
+                                <input type="checkbox" id="ipBlocking" checked>
+                                <span class="slider"></span>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="encryptionLevel">مستوى التشفير</label>
+                        <select id="encryptionLevel" class="form-control">
+                            <option value="basic">أساسي</option>
+                            <option value="standard" selected>قياسي</option>
+                            <option value="advanced">متقدم</option>
+                            <option value="military">عسكري</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3><i class="fas fa-database"></i> قاعدة البيانات</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dbHost">مضيف قاعدة البيانات</label>
+                            <input type="text" id="dbHost" class="form-control" value="localhost">
+                        </div>
+                        <div class="form-group">
+                            <label for="dbPort">المنفذ</label>
+                            <input type="number" id="dbPort" class="form-control" value="3306">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dbName">اسم قاعدة البيانات</label>
+                            <input type="text" id="dbName" class="form-control" value="dotnet_db">
+                        </div>
+                        <div class="form-group">
+                            <label for="dbUser">اسم مستخدم قاعدة البيانات</label>
+                            <input type="text" id="dbUser" class="form-control" value="dotnet_user">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-success" onclick="saveAdvancedSettings()">
+                    <i class="fas fa-save"></i> حفظ الإعدادات المتقدمة
+                </button>
+                <button class="btn btn-outline" onclick="closeModal('advancedSettingsModal')">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- شاشة النسخ الاحتياطي -->
+    <div class="modal-overlay" id="backupModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>النسخ الاحتياطي اليدوي</h2>
+                <button class="modal-close" onclick="closeModal('backupModal')">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="confirmation-modal">
+                    <div class="confirmation-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="confirmation-text">
+                        <h3>هل تريد إنشاء نسخة احتياطية يدوية؟</h3>
+                        <p>سيتم إنشاء نسخة احتياطية كاملة من جميع بيانات النظام بما في ذلك:</p>
+                        <ul style="text-align: right; margin: 20px 0; padding-right: 20px;">
+                            <li>بيانات المستخدمين</li>
+                            <li>رسائل اتصل بنا</li>
+                            <li>طلبات الخدمات</li>
+                            <li>الإعدادات</li>
+                            <li>قاعدة البيانات</li>
+                        </ul>
+                        <p>حجم النسخة الاحتياطية المتوقع: <strong>~45 MB</strong></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-success" onclick="createBackup()">
+                    <i class="fas fa-download"></i> إنشاء نسخة احتياطية
+                </button>
+                <button class="btn btn-outline" onclick="closeModal('backupModal')">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- شاشة إعادة التعيين -->
+    <div class="modal-overlay" id="resetModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>إعادة تعيين الإعدادات</h2>
+                <button class="modal-close" onclick="closeModal('resetModal')">&times;</button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="confirmation-modal">
+                    <div class="confirmation-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="confirmation-text">
+                        <h3>هل أنت متأكد من إعادة تعيين الإعدادات؟</h3>
+                        <p>هذا الإجراء سيعيد جميع الإعدادات إلى قيمها الافتراضية الأصلية.</p>
+                        <p><strong>تحذير:</strong> هذا الإجراء لا يمكن التراجع عنه. سيتم فقدان جميع التخصيصات والتعديلات التي قمت بها.</p>
+                        <div class="form-group" style="text-align: right; margin-top: 20px;">
+                            <label>
+                                <input type="checkbox" id="confirmReset" style="margin-left: 10px;">
+                                أنا أدرك أن هذا الإجراء لا يمكن التراجع عنه
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal-footer">
+                <button class="btn btn-danger" onclick="confirmReset()" id="resetBtn" disabled>
+                    <i class="fas fa-redo"></i> إعادة تعيين الإعدادات
+                </button>
+                <button class="btn btn-outline" onclick="closeModal('resetModal')">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات الإعدادات
+        let settings = {
+            general: {
+                systemName: "دوت نت - لوحة التحكم",
+                systemVersion: "v2.5.1",
+                timezone: "+3",
+                language: "ar",
+                cacheEnabled: true,
+                cacheDuration: 24
+            },
+            site: {
+                siteTitle: "دوت نت - شريكك في التحول الرقمي",
+                siteDescription: "نقدم حلولاً تقنية مبتكرة تساعد عملك على النمو والازدهار في العصر الرقمي",
+                primaryColor: "#c00a27",
+                seoKeywords: "تطوير مواقع, تطبيقات جوال, تسويق رقمي, أنظمة ERP, حلول تقنية"
+            },
+            security: {
+                securityEnabled: true,
+                maxLoginAttempts: 5,
+                sessionTimeout: 30
+            },
+            email: {
+                smtpHost: "smtp.gmail.com",
+                smtpPort: "587",
+                smtpUser: "info@dotnet.com",
+                smtpPass: "********"
+            },
+            backup: {
+                autoBackup: true,
+                backupFrequency: "weekly",
+                backupRetention: 30
+            },
+            api: {
+                apiEnabled: true,
+                apiKey: "dotnet_ap1_k3y_2023_secr3t"
+            },
+            advanced: {
+                gzipEnabled: true,
+                imageOptimization: true,
+                queryCache: 256,
+                twoFactorAuth: false,
+                ipBlocking: true,
+                encryptionLevel: "standard",
+                dbHost: "localhost",
+                dbPort: 3306,
+                dbName: "dotnet_db",
+                dbUser: "dotnet_user"
+            }
+        };
+
+        // تهيئة الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSettings();
+            setupEventListeners();
+            createBubbles();
+            startAnimations();
+        });
+
+        // إنشاء الفقاعات المتحركة
+        function createBubbles() {
+            const bubblesContainer = document.getElementById('bubbles');
+            const bubbleCount = 20;
+            
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                
+                // حجم عشوائي للفقاعة
+                const size = Math.random() * 100 + 30;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                
+                // موضع بداية عشوائي
+                bubble.style.left = `${Math.random() * 100}%`;
+                
+                // مدة حركة عشوائية
+                const duration = Math.random() * 40 + 20;
+                bubble.style.animationDuration = `${duration}s`;
+                
+                // تأخير عشوائي
+                bubble.style.animationDelay = `${Math.random() * 30}s`;
+                
+                // تحديد المسار النهائي للفقاعة
+                const xEnd = Math.random() * 300 - 150;
+                bubble.style.setProperty('--bubble-x-end', `${xEnd}px`);
+                
+                // شفافية عشوائية
+                bubble.style.opacity = Math.random() * 0.2 + 0.1;
+                
+                bubblesContainer.appendChild(bubble);
+            }
+        }
+
+        // بدء الأنيميشن
+        function startAnimations() {
+            // تأخير لبدء الأنيميشن بعد تحميل الصفحة
+            setTimeout(() => {
+                document.querySelectorAll('.stat-card').forEach(card => {
+                    card.style.animationPlayState = 'running';
+                });
+                
+                document.querySelector('.modal-cube').style.animationPlayState = 'running';
+            }, 1000);
+        }
+
+        // تحميل الإعدادات
+        function loadSettings() {
+            // تحميل الإعدادات العامة
+            document.getElementById('systemName').value = settings.general.systemName;
+            document.getElementById('systemVersion').value = settings.general.systemVersion;
+            document.getElementById('timezone').value = settings.general.timezone;
+            document.getElementById('language').value = settings.general.language;
+            document.getElementById('cacheEnabled').checked = settings.general.cacheEnabled;
+            document.getElementById('cacheDuration').value = settings.general.cacheDuration;
+            
+            // تحميل إعدادات الموقع
+            document.getElementById('siteTitle').value = settings.site.siteTitle;
+            document.getElementById('siteDescription').value = settings.site.siteDescription;
+            document.getElementById('seoKeywords').value = settings.site.seoKeywords;
+            
+            // تحديث ألوان السمة
+            updateColorSelection(settings.site.primaryColor);
+            
+            // تحميل إعدادات الأمان
+            document.getElementById('securityEnabled').checked = settings.security.securityEnabled;
+            document.getElementById('maxLoginAttempts').value = settings.security.maxLoginAttempts;
+            document.getElementById('sessionTimeout').value = settings.security.sessionTimeout;
+            
+            // تحميل إعدادات البريد
+            document.getElementById('smtpHost').value = settings.email.smtpHost;
+            document.getElementById('smtpPort').value = settings.email.smtpPort;
+            document.getElementById('smtpUser').value = settings.email.smtpUser;
+            document.getElementById('smtpPass').value = settings.email.smtpPass;
+            
+            // تحميل إعدادات النسخ الاحتياطي
+            document.getElementById('autoBackup').checked = settings.backup.autoBackup;
+            document.getElementById('backupFrequency').value = settings.backup.backupFrequency;
+            document.getElementById('backupRetention').value = settings.backup.backupRetention;
+            
+            // تحميل إعدادات API
+            document.getElementById('apiEnabled').checked = settings.api.apiEnabled;
+            document.getElementById('apiKey').value = settings.api.apiKey;
+            
+            // تحميل الإعدادات المتقدمة
+            document.getElementById('gzipEnabled').checked = settings.advanced.gzipEnabled;
+            document.getElementById('imageOptimization').checked = settings.advanced.imageOptimization;
+            document.getElementById('queryCache').value = settings.advanced.queryCache;
+            document.getElementById('queryCacheValue').textContent = `${settings.advanced.queryCache} MB`;
+            document.getElementById('twoFactorAuth').checked = settings.advanced.twoFactorAuth;
+            document.getElementById('ipBlocking').checked = settings.advanced.ipBlocking;
+            document.getElementById('encryptionLevel').value = settings.advanced.encryptionLevel;
+            document.getElementById('dbHost').value = settings.advanced.dbHost;
+            document.getElementById('dbPort').value = settings.advanced.dbPort;
+            document.getElementById('dbName').value = settings.advanced.dbName;
+            document.getElementById('dbUser').value = settings.advanced.dbUser;
+            
+            // تحديث الإحصائيات
+            updateStats();
+        }
+
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // تبديل التبويبات
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.dataset.tab;
+                    
+                    // إخفاء كل المحتويات
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // إلغاء تنشيط كل الأزرار
+                    document.querySelectorAll('.tab-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // إظهار المحتوى المحدد
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                    this.classList.add('active');
+                });
+            });
+            
+            // اختيار الألوان
+            document.querySelectorAll('.color-option').forEach(color => {
+                color.addEventListener('click', function() {
+                    document.querySelectorAll('.color-option').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    settings.site.primaryColor = this.dataset.color;
+                    applyColorTheme(settings.site.primaryColor);
+                });
+            });
+            
+            // شريط التمرير للذاكرة المؤقتة
+            document.getElementById('queryCache').addEventListener('input', function() {
+                document.getElementById('queryCacheValue').textContent = `${this.value} MB`;
+            });
+            
+            // تأكيد إعادة التعيين
+            document.getElementById('confirmReset').addEventListener('change', function() {
+                document.getElementById('resetBtn').disabled = !this.checked;
+            });
+            
+            // حفظ الإعدادات عند التغيير
+            document.querySelectorAll('.form-control, .switch input').forEach(element => {
+                element.addEventListener('change', saveSettings);
+            });
+        }
+
+        // تحديث اختيار اللون
+        function updateColorSelection(color) {
+            document.querySelectorAll('.color-option').forEach(option => {
+                option.classList.remove('active');
+                if (option.dataset.color === color) {
+                    option.classList.add('active');
+                }
+            });
+        }
+
+        // تطبيق سمة اللون
+        function applyColorTheme(color) {
+            // يمكن إضافة منطق لتطبيق اللون ديناميكياً
+            console.log(`تطبيق اللون: ${color}`);
+            // في التطبيق الحقيقي، يمكن تغيير CSS Variables هنا
+        }
+
+        // تحديث الإحصائيات
+        function updateStats() {
+            // يمكن حساب الإحصائيات الحقيقية هنا
+            document.getElementById('generalCount').textContent = Object.keys(settings.general).length;
+            document.getElementById('siteCount').textContent = Object.keys(settings.site).length;
+            document.getElementById('securityCount').textContent = Object.keys(settings.security).length;
+            document.getElementById('emailCount').textContent = Object.keys(settings.email).length;
+        }
+
+        // حفظ الإعدادات
+        function saveSettings() {
+            // حفظ الإعدادات العامة
+            settings.general.systemName = document.getElementById('systemName').value;
+            settings.general.systemVersion = document.getElementById('systemVersion').value;
+            settings.general.timezone = document.getElementById('timezone').value;
+            settings.general.language = document.getElementById('language').value;
+            settings.general.cacheEnabled = document.getElementById('cacheEnabled').checked;
+            settings.general.cacheDuration = parseInt(document.getElementById('cacheDuration').value);
+            
+            // حفظ إعدادات الموقع
+            settings.site.siteTitle = document.getElementById('siteTitle').value;
+            settings.site.siteDescription = document.getElementById('siteDescription').value;
+            settings.site.seoKeywords = document.getElementById('seoKeywords').value;
+            
+            // حفظ إعدادات الأمان
+            settings.security.securityEnabled = document.getElementById('securityEnabled').checked;
+            settings.security.maxLoginAttempts = parseInt(document.getElementById('maxLoginAttempts').value);
+            settings.security.sessionTimeout = parseInt(document.getElementById('sessionTimeout').value);
+            
+            // حفظ إعدادات البريد
+            settings.email.smtpHost = document.getElementById('smtpHost').value;
+            settings.email.smtpPort = parseInt(document.getElementById('smtpPort').value);
+            settings.email.smtpUser = document.getElementById('smtpUser').value;
+            settings.email.smtpPass = document.getElementById('smtpPass').value;
+            
+            // حفظ إعدادات النسخ الاحتياطي
+            settings.backup.autoBackup = document.getElementById('autoBackup').checked;
+            settings.backup.backupFrequency = document.getElementById('backupFrequency').value;
+            settings.backup.backupRetention = parseInt(document.getElementById('backupRetention').value);
+            
+            // حفظ إعدادات API
+            settings.api.apiEnabled = document.getElementById('apiEnabled').checked;
+            
+            // حفظ محلياً (في التطبيق الحقيقي، يتم حفظ في قاعدة بيانات)
+            localStorage.setItem('dashboardSettings', JSON.stringify(settings));
+            
+            // إظهار رسالة النجاح
+            showSuccessMessage('تم حفظ الإعدادات بنجاح!');
+        }
+
+        // حفظ الإعدادات المتقدمة
+        function saveAdvancedSettings() {
+            settings.advanced.gzipEnabled = document.getElementById('gzipEnabled').checked;
+            settings.advanced.imageOptimization = document.getElementById('imageOptimization').checked;
+            settings.advanced.queryCache = parseInt(document.getElementById('queryCache').value);
+            settings.advanced.twoFactorAuth = document.getElementById('twoFactorAuth').checked;
+            settings.advanced.ipBlocking = document.getElementById('ipBlocking').checked;
+            settings.advanced.encryptionLevel = document.getElementById('encryptionLevel').value;
+            settings.advanced.dbHost = document.getElementById('dbHost').value;
+            settings.advanced.dbPort = parseInt(document.getElementById('dbPort').value);
+            settings.advanced.dbName = document.getElementById('dbName').value;
+            settings.advanced.dbUser = document.getElementById('dbUser').value;
+            
+            // حفظ محلياً
+            localStorage.setItem('dashboardSettings', JSON.stringify(settings));
+            
+            closeModal('advancedSettingsModal');
+            showSuccessMessage('تم حفظ الإعدادات المتقدمة بنجاح!');
+        }
+
+        // إنشاء مفتاح API جديد
+        function generateApiKey() {
+            const newApiKey = 'dotnet_ap1_k3y_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            document.getElementById('apiKey').value = newApiKey;
+            settings.api.apiKey = newApiKey;
+            showSuccessMessage('تم إنشاء مفتاح API جديد!');
+        }
+
+        // إنشاء نسخة احتياطية
+        function createBackup() {
+            // محاكاة عملية النسخ الاحتياطي
+            showLoadingMessage('جاري إنشاء النسخة الاحتياطية...');
+            
+            setTimeout(() => {
+                const backupData = {
+                    settings: settings,
+                    timestamp: new Date().toISOString(),
+                    version: settings.general.systemVersion,
+                    size: "45 MB"
+                };
+                
+                // في التطبيق الحقيقي، هنا يتم تحميل الملف
+                const dataStr = JSON.stringify(backupData, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                
+                const exportFileDefaultName = `backup_dotnet_${new Date().toISOString().split('T')[0]}.json`;
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+                
+                closeModal('backupModal');
+                showSuccessMessage('تم إنشاء النسخة الاحتياطية بنجاح!');
+            }, 2000);
+        }
+
+        // تأكيد إعادة التعيين
+        function confirmReset() {
+            if (!document.getElementById('confirmReset').checked) return;
+            
+            // إعادة تعيين الإعدادات إلى الافتراضية
+            settings = {
+                general: {
+                    systemName: "دوت نت - لوحة التحكم",
+                    systemVersion: "v2.5.1",
+                    timezone: "+3",
+                    language: "ar",
+                    cacheEnabled: true,
+                    cacheDuration: 24
+                },
+                site: {
+                    siteTitle: "دوت نت - شريكك في التحول الرقمي",
+                    siteDescription: "نقدم حلولاً تقنية مبتكرة تساعد عملك على النمو والازدهار في العصر الرقمي",
+                    primaryColor: "#c00a27",
+                    seoKeywords: "تطوير مواقع, تطبيقات جوال, تسويق رقمي, أنظمة ERP, حلول تقنية"
+                },
+                security: {
+                    securityEnabled: true,
+                    maxLoginAttempts: 5,
+                    sessionTimeout: 30
+                },
+                email: {
+                    smtpHost: "smtp.gmail.com",
+                    smtpPort: "587",
+                    smtpUser: "info@dotnet.com",
+                    smtpPass: "********"
+                },
+                backup: {
+                    autoBackup: true,
+                    backupFrequency: "weekly",
+                    backupRetention: 30
+                },
+                api: {
+                    apiEnabled: true,
+                    apiKey: "dotnet_ap1_k3y_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9)
+                },
+                advanced: {
+                    gzipEnabled: true,
+                    imageOptimization: true,
+                    queryCache: 256,
+                    twoFactorAuth: false,
+                    ipBlocking: true,
+                    encryptionLevel: "standard",
+                    dbHost: "localhost",
+                    dbPort: 3306,
+                    dbName: "dotnet_db",
+                    dbUser: "dotnet_user"
+                }
+            };
+            
+            // إعادة تحميل الصفحة
+            loadSettings();
+            
+            // إعادة تعيين مربع الاختيار
+            document.getElementById('confirmReset').checked = false;
+            document.getElementById('resetBtn').disabled = true;
+            
+            closeModal('resetModal');
+            showSuccessMessage('تم إعادة تعيين جميع الإعدادات إلى الافتراضية!');
+        }
+
+        // فتح شاشات منبثقة
+        function openAdvancedSettings() {
+            openModal('advancedSettingsModal');
+        }
+
+        function openBackupModal() {
+            openModal('backupModal');
+        }
+
+        function openResetModal() {
+            openModal('resetModal');
+        }
+
+        // إظهار رسائل
+        function showSuccessMessage(message) {
+            const alert = document.createElement('div');
+            alert.style.cssText = `
+                position: fixed;
+                top: 100px;
+                left: 20px;
+                background: linear-gradient(135deg, var(--success) 0%, #1e7e34 100%);
+                color: white;
+                padding: 15px 25px;
+                border-radius: var(--radius);
+                z-index: 4000;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                animation: slideInLeft 0.3s ease-out, fadeOut 0.3s ease-out 2.7s;
+                max-width: 400px;
+            `;
+            alert.innerHTML = `<i class="fas fa-check-circle" style="margin-left: 10px;"></i> ${message}`;
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+
+        function showLoadingMessage(message) {
+            const alert = document.createElement('div');
+            alert.style.cssText = `
+                position: fixed;
+                top: 100px;
+                left: 20px;
+                background: linear-gradient(135deg, var(--info) 0%, #117a8b 100%);
+                color: white;
+                padding: 15px 25px;
+                border-radius: var(--radius);
+                z-index: 4000;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+                animation: slideInLeft 0.3s ease-out;
+                max-width: 400px;
+            `;
+            alert.innerHTML = `<i class="fas fa-spinner fa-spin" style="margin-left: 10px;"></i> ${message}`;
+            document.body.appendChild(alert);
+            
+            return alert;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        // فتح الشاشة المنبثقة
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // إغلاق الشاشة المنبثقة
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // النقر خارج الشاشة المنبثقة لإغلاقها
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    const modalId = this.id;
+                    closeModal(modalId);
+                }
+            });
+        });
+
+        // إضافة أزرار للتبويبات الإضافية
+        document.addEventListener('DOMContentLoaded', function() {
+            // زر النسخ الاحتياطي اليدوي
+            const backupTab = document.querySelector('[data-tab="backup"]');
+            const backupButton = document.createElement('button');
+            backupButton.className = 'btn btn-small';
+            backupButton.style.cssText = 'margin-top: 10px; width: 100%;';
+            backupButton.innerHTML = '<i class="fas fa-download"></i> نسخة يدوية';
+            backupButton.onclick = openBackupModal;
+            document.getElementById('backup-tab').appendChild(backupButton);
+            
+            // زر إعادة التعيين
+            const resetButton = document.createElement('button');
+            resetButton.className = 'btn btn-outline btn-small';
+            resetButton.style.cssText = 'margin-top: 10px; width: 100%;';
+            resetButton.innerHTML = '<i class="fas fa-redo"></i> إعادة تعيين';
+            resetButton.onclick = openResetModal;
+            document.getElementById('general-tab').appendChild(resetButton);
+        });
+    </script>
+</body>
+</html>

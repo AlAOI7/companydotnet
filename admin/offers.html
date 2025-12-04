@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دوت نت - إدارة الإعلانات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #c00a27;
+            --primary-dark: #8a001a;
+            --primary-light: #ff4d6d;
+            --secondary: #000000;
+            --secondary-light: #1a1a1a;
+            --sidebar: #0c0c0c;
+            --content-bg: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --text: #ffffff;
+            --text-light: #b0b0b0;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --danger: #dc3545;
+            --radius: 12px;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--content-bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+        }
+        
+        /* الشريط الجانبي */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar);
+            height: 100vh;
+            position: fixed;
+            right: 0;
+            top: 0;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 0;
+            transition: var(--transition);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 30px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .sidebar-logo span {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0 15px;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: var(--radius);
+            transition: var(--transition);
+            gap: 15px;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: white;
+        }
+        
+        .sidebar-menu a.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(192, 10, 39, 0.3);
+        }
+        
+        /* المحتوى الرئيسي */
+        .main-content {
+            flex: 1;
+            margin-right: 260px;
+            padding: 20px;
+            transition: var(--transition);
+        }
+        
+        /* شريط التنقل العلوي */
+        .top-navbar {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 15px 25px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .page-title h1 {
+            font-size: 28px;
+            color: white;
+        }
+        
+        .page-title p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        /* زر الإضافة */
+        .add-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            padding: 12px 25px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+        }
+        
+        .add-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(192, 10, 39, 0.3);
+        }
+        
+        /* وحدة إضافة إعلان */
+        .add-offer-container {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+        
+        .add-offer-container.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .form-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .form-header h3 {
+            font-size: 22px;
+            color: white;
+        }
+        
+        .close-form {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 24px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .close-form:hover {
+            color: var(--danger);
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius);
+            color: white;
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(192, 10, 39, 0.3);
+        }
+        
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(192, 10, 39, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* فلترة وترتيب */
+        .filter-container {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .filter-title {
+            font-size: 18px;
+            color: white;
+        }
+        
+        .reset-filters {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 14px;
+            transition: var(--transition);
+        }
+        
+        .reset-filters:hover {
+            text-decoration: underline;
+        }
+        
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .filter-label {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .filter-select {
+            padding: 10px 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius);
+            color: white;
+            font-size: 14px;
+        }
+        
+        /* شبكة عرض الإعلانات */
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        
+        .offer-card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+            position: relative;
+        }
+        
+        .offer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow);
+            border-color: var(--primary);
+        }
+        
+        .offer-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .offer-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .badge-active {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .badge-inactive {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .badge-featured {
+            background-color: var(--warning);
+            color: black;
+        }
+        
+        .offer-content {
+            padding: 20px;
+        }
+        
+        .offer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .offer-title {
+            font-size: 20px;
+            color: white;
+            margin-bottom: 5px;
+        }
+        
+        .offer-category {
+            color: var(--primary);
+            font-size: 14px;
+            background-color: rgba(192, 10, 39, 0.1);
+            padding: 3px 10px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .offer-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .offer-desc {
+            color: var(--text-light);
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .offer-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        
+        .offer-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .action-btn {
+            padding: 8px 15px;
+            border-radius: var(--radius);
+            border: none;
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .edit-btn {
+            background-color: rgba(23, 162, 184, 0.2);
+            color: var(--info);
+            border: 1px solid rgba(23, 162, 184, 0.3);
+        }
+        
+        .edit-btn:hover {
+            background-color: var(--info);
+            color: white;
+        }
+        
+        .delete-btn {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: var(--danger);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+        
+        .delete-btn:hover {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        /* Pagination */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 40px;
+        }
+        
+        .pagination-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .pagination-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .pagination-btn:hover:not(.active) {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* رسائل التحميل والخطأ */
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-light);
+            grid-column: 1 / -1;
+        }
+        
+        .no-data i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+        
+        /* Modal تأكيد الحذف */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: scaleIn 0.3s ease;
+        }
+        
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-title {
+            font-size: 22px;
+            color: white;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 24px;
+            cursor: pointer;
+        }
+        
+        .modal-body {
+            margin-bottom: 30px;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+        
+        /* التجاوب مع الشاشات */
+        @media (max-width: 1200px) {
+            .offers-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(100%);
+                width: 280px;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-right: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .overlay {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.7);
+                z-index: 999;
+                display: none;
+            }
+            
+            .overlay.active {
+                display: block;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .offers-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .modal-actions {
+                flex-direction: column;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 15px;
+            }
+            
+            .top-navbar {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .add-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .offer-actions {
+                flex-direction: column;
+            }
+            
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- الشريط الجانبي -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="1.jpg" alt="دوت نت">
+                <span>دوت نت</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.html">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>لوحة التحكم</span>
+            </a></li>
+            
+            <li><a href="offers.html" class="active">
+                <i class="fas fa-bullhorn"></i>
+                <span>الإعلانات</span>
+            </a></li>
+            
+            <li><a href="serves.html">
+                <i class="fas fa-concierge-bell"></i>
+                <span>الخدمات</span>
+            </a></li>
+            
+            <li><a href="blog.html">
+                <i class="fas fa-blog"></i>
+                <span>المدونة</span>
+            </a></li>
+            
+            <li><a href="about.html">
+                <i class="fas fa-info-circle"></i>
+                <span>من نحن</span>
+            </a></li>
+            
+            <li><a href="erp.html">
+                <i class="fas fa-cogs"></i>
+                <span>نظام ERP</span>
+            </a></li>
+            
+            <li><a href="Service-request.html">
+                <i class="fas fa-headset"></i>
+                <span>طلب خدمة</span>
+            </a></li>
+            
+            <li><a href="contact.html">
+                <i class="fas fa-envelope"></i>
+                <span>اتصل بنا</span>
+            </a></li>
+            
+            <li><a href="#" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>تسجيل الخروج</span>
+            </a></li>
+        </ul>
+    </div>
+    
+    <!-- طبقة التعتيم للشريط الجانبي على الجوال -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content" id="mainContent">
+        <!-- شريط التنقل العلوي -->
+        <nav class="top-navbar">
+            <div class="nav-left">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="page-title">
+                    <h1>إدارة الإعلانات</h1>
+                    <p>إضافة وعرض وتعديل الإعلانات</p>
+                </div>
+            </div>
+            
+            <button class="add-btn" id="addOfferBtn">
+                <i class="fas fa-plus"></i>
+                <span>إضافة إعلان جديد</span>
+            </button>
+        </nav>
+        
+        <!-- وحدة إضافة/تعديل إعلان -->
+        <div class="add-offer-container" id="addOfferContainer">
+            <div class="form-header">
+                <h3 id="formTitle">إضافة إعلان جديد</h3>
+                <button class="close-form" id="closeFormBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="offerForm">
+                <input type="hidden" id="offerId" value="">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="offerTitle" class="form-label">عنوان الإعلان</label>
+                        <input type="text" id="offerTitle" class="form-control" placeholder="أدخل عنوان الإعلان" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="offerCategory" class="form-label">التصنيف</label>
+                        <select id="offerCategory" class="form-control" required>
+                            <option value="">اختر التصنيف</option>
+                            <option value="عروض خاصة">عروض خاصة</option>
+                            <option value="عروض موسمية">عروض موسمية</option>
+                            <option value="خصومات">خصومات</option>
+                            <option value="إعلانات توظيف">إعلانات توظيف</option>
+                            <option value="أخبار">أخبار</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="offerPrice" class="form-label">السعر (ر.س)</label>
+                        <input type="number" id="offerPrice" class="form-control" placeholder="أدخل السعر" step="0.01" min="0">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="offerDiscount" class="form-label">نسبة الخصم (%)</label>
+                        <input type="number" id="offerDiscount" class="form-control" placeholder="أدخل نسبة الخصم" min="0" max="100">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="offerDescription" class="form-label">وصف الإعلان</label>
+                        <textarea id="offerDescription" class="form-control" placeholder="أدخل وصف الإعلان" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="offerStartDate" class="form-label">تاريخ البدء</label>
+                        <input type="date" id="offerStartDate" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="offerEndDate" class="form-label">تاريخ الانتهاء</label>
+                        <input type="date" id="offerEndDate" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="offerStatus" class="form-label">الحالة</label>
+                        <select id="offerStatus" class="form-control" required>
+                            <option value="active">نشط</option>
+                            <option value="inactive">غير نشط</option>
+                            <option value="pending">قيد المراجعة</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="offerFeatured" class="form-label">مميز</label>
+                        <select id="offerFeatured" class="form-control">
+                            <option value="no">لا</option>
+                            <option value="yes">نعم</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="offerImage" class="form-label">رابط صورة الإعلان</label>
+                        <input type="url" id="offerImage" class="form-control" placeholder="https://example.com/image.jpg">
+                        <small style="color: var(--text-light); display: block; margin-top: 5px;">يمكنك ترك هذا الحقل فارغاً وسيتم استخدام صورة افتراضية</small>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ الإعلان
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- فلترة وترتيب -->
+        <div class="filter-container">
+            <div class="filter-header">
+                <h3 class="filter-title">فلترة وترتيب الإعلانات</h3>
+                <button class="reset-filters" id="resetFiltersBtn">إعادة تعيين</button>
+            </div>
+            
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label class="filter-label">بحث</label>
+                    <input type="text" class="form-control" id="searchInput" placeholder="ابحث في الإعلانات...">
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">التصنيف</label>
+                    <select class="filter-select" id="categoryFilter">
+                        <option value="">جميع التصنيفات</option>
+                        <option value="عروض خاصة">عروض خاصة</option>
+                        <option value="عروض موسمية">عروض موسمية</option>
+                        <option value="خصومات">خصومات</option>
+                        <option value="إعلانات توظيف">إعلانات توظيف</option>
+                        <option value="أخبار">أخبار</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">الحالة</label>
+                    <select class="filter-select" id="statusFilter">
+                        <option value="">جميع الحالات</option>
+                        <option value="active">نشط</option>
+                        <option value="inactive">غير نشط</option>
+                        <option value="pending">قيد المراجعة</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">الترتيب</label>
+                    <select class="filter-select" id="sortFilter">
+                        <option value="newest">الأحدث أولاً</option>
+                        <option value="oldest">الأقدم أولاً</option>
+                        <option value="price-high">السعر (مرتفع إلى منخفض)</option>
+                        <option value="price-low">السعر (منخفض إلى مرتفع)</option>
+                        <option value="name">حسب الاسم</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- عرض الإعلانات -->
+        <div id="offersContainer">
+            <div class="loading" id="loadingIndicator">
+                <i class="fas fa-spinner fa-spin"></i>
+                <p>جاري تحميل الإعلانات...</p>
+            </div>
+            
+            <div class="offers-grid" id="offersGrid"></div>
+            
+            <div class="no-data" id="noDataMessage" style="display: none;">
+                <i class="fas fa-bullhorn"></i>
+                <h3>لا توجد إعلانات</h3>
+                <p>ابدأ بإضافة أول إعلان لك</p>
+            </div>
+        </div>
+        
+        <!-- Pagination -->
+        <div class="pagination" id="pagination" style="display: none;"></div>
+    </div>
+    
+    <!-- Modal تأكيد الحذف -->
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">تأكيد الحذف</h3>
+                <button class="modal-close" id="closeModalBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>هل أنت متأكد من حذف هذا الإعلان؟</p>
+                <p><strong>ملاحظة:</strong> لا يمكن التراجع عن هذا الإجراء بعد التنفيذ.</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancelDeleteBtn">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">
+                    <i class="fas fa-trash"></i> حذف الإعلان
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات المثال للإعلانات
+        const sampleOffers = [
+            {
+                id: 1,
+                title: "عرض خاص على تصميم المواقع",
+                category: "عروض خاصة",
+                description: "احصل على خصم 30% على تصميم المواقع الإلكترونية. العرض ساري حتى نهاية الشهر.",
+                price: 2999,
+                discount: 30,
+                startDate: "2023-12-01",
+                endDate: "2023-12-31",
+                status: "active",
+                featured: "yes",
+                image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                createdAt: "2023-11-15",
+                views: 245
+            },
+            {
+                id: 2,
+                title: "تطبيقات الجوال بخصم 25%",
+                category: "خصومات",
+                description: "خصم 25% على تطوير تطبيقات الجوال لأنظمة iOS و Android.",
+                price: 4999,
+                discount: 25,
+                startDate: "2023-12-10",
+                endDate: "2024-01-10",
+                status: "active",
+                featured: "no",
+                image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                createdAt: "2023-11-20",
+                views: 189
+            },
+            {
+                id: 3,
+                title: "مطلوب مطور ويب",
+                category: "إعلانات توظيف",
+                description: "مطلوب مطور ويب بخبرة لا تقل عن 3 سنوات في React و Node.js.",
+                price: 0,
+                discount: 0,
+                startDate: "2023-12-01",
+                endDate: "2023-12-20",
+                status: "active",
+                featured: "yes",
+                image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                createdAt: "2023-11-25",
+                views: 312
+            },
+            {
+                id: 4,
+                title: "حزمة التسويق الرقمي",
+                category: "عروض موسمية",
+                description: "حزمة متكاملة للتسويق الرقمي تشمل إدارة وسائل التواصل الاجتماعي وتحسين محركات البحث.",
+                price: 1999,
+                discount: 20,
+                startDate: "2023-11-01",
+                endDate: "2023-11-30",
+                status: "inactive",
+                featured: "no",
+                image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                createdAt: "2023-10-15",
+                views: 156
+            },
+            {
+                id: 5,
+                title: "نظام ERP للشركات الصغيرة",
+                category: "أخبار",
+                description: "إطلاق نظام ERP جديد مخصص للشركات الصغيرة والمتوسطة.",
+                price: 8999,
+                discount: 15,
+                startDate: "2023-12-15",
+                endDate: "2024-01-15",
+                status: "pending",
+                featured: "no",
+                image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
+                createdAt: "2023-11-30",
+                views: 98
+            }
+        ];
+
+        // متغيرات النظام
+        let offers = JSON.parse(localStorage.getItem('offers')) || sampleOffers;
+        let currentPage = 1;
+        let itemsPerPage = 6;
+        let deleteOfferId = null;
+        let editMode = false;
+
+        // تهيئة النظام
+        document.addEventListener('DOMContentLoaded', function() {
+            // التحقق من تسجيل الدخول
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn !== 'true') {
+                window.location.href = 'login.html';
+            }
+            
+            initOffersSystem();
+            loadOffers();
+            setupEventListeners();
+        });
+
+        // تهيئة نظام الإعلانات
+        function initOffersSystem() {
+            // حفظ بيانات المثال إذا لم تكن موجودة
+            if (!localStorage.getItem('offers')) {
+                localStorage.setItem('offers', JSON.stringify(sampleOffers));
+                offers = sampleOffers;
+            }
+        }
+
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // إدارة الشريط الجانبي للجوال
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // زر إضافة إعلان جديد
+            document.getElementById('addOfferBtn').addEventListener('click', showAddForm);
+            
+            // إغلاق النموذج
+            document.getElementById('closeFormBtn').addEventListener('click', hideAddForm);
+            document.getElementById('cancelBtn').addEventListener('click', hideAddForm);
+            
+            // تقديم النموذج
+            document.getElementById('offerForm').addEventListener('submit', handleFormSubmit);
+            
+            // إعادة تعيين الفلاتر
+            document.getElementById('resetFiltersBtn').addEventListener('click', resetFilters);
+            
+            // الفلاتر والبحث
+            document.getElementById('searchInput').addEventListener('input', filterOffers);
+            document.getElementById('categoryFilter').addEventListener('change', filterOffers);
+            document.getElementById('statusFilter').addEventListener('change', filterOffers);
+            document.getElementById('sortFilter').addEventListener('change', filterOffers);
+            
+            // Modal الحذف
+            document.getElementById('closeModalBtn').addEventListener('click', hideDeleteModal);
+            document.getElementById('cancelDeleteBtn').addEventListener('click', hideDeleteModal);
+            document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
+            
+            // تسجيل الخروج
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('هل تريد تسجيل الخروج؟')) {
+                    localStorage.removeItem('isLoggedIn');
+                    window.location.href = 'login.html';
+                }
+            });
+            
+            // تعيين تاريخ اليوم كحد أدنى
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('offerStartDate').min = today;
+            document.getElementById('offerEndDate').min = today;
+            
+            // تحديث الحد الأدنى لتاريخ الانتهاء عند تغيير تاريخ البدء
+            document.getElementById('offerStartDate').addEventListener('change', function() {
+                document.getElementById('offerEndDate').min = this.value;
+            });
+        }
+
+        // عرض نموذج الإضافة
+        function showAddForm(offer = null) {
+            const formContainer = document.getElementById('addOfferContainer');
+            const formTitle = document.getElementById('formTitle');
+            const form = document.getElementById('offerForm');
+            
+            if (offer) {
+                // وضع التعديل
+                editMode = true;
+                formTitle.textContent = 'تعديل الإعلان';
+                fillFormWithOfferData(offer);
+            } else {
+                // وضع الإضافة
+                editMode = false;
+                formTitle.textContent = 'إضافة إعلان جديد';
+                form.reset();
+                document.getElementById('offerId').value = '';
+                
+                // تعيين التاريخ الافتراضي
+                const today = new Date().toISOString().split('T')[0];
+                const nextWeek = new Date();
+                nextWeek.setDate(nextWeek.getDate() + 7);
+                const nextWeekFormatted = nextWeek.toISOString().split('T')[0];
+                
+                document.getElementById('offerStartDate').value = today;
+                document.getElementById('offerEndDate').value = nextWeekFormatted;
+            }
+            
+            formContainer.classList.add('active');
+            formContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ملء النموذج ببيانات الإعلان
+        function fillFormWithOfferData(offer) {
+            document.getElementById('offerId').value = offer.id;
+            document.getElementById('offerTitle').value = offer.title;
+            document.getElementById('offerCategory').value = offer.category;
+            document.getElementById('offerPrice').value = offer.price;
+            document.getElementById('offerDiscount').value = offer.discount;
+            document.getElementById('offerDescription').value = offer.description;
+            document.getElementById('offerStartDate').value = offer.startDate;
+            document.getElementById('offerEndDate').value = offer.endDate;
+            document.getElementById('offerStatus').value = offer.status;
+            document.getElementById('offerFeatured').value = offer.featured;
+            document.getElementById('offerImage').value = offer.image || '';
+        }
+
+        // إخفاء نموذج الإضافة
+        function hideAddForm() {
+            document.getElementById('addOfferContainer').classList.remove('active');
+            document.getElementById('offerForm').reset();
+            editMode = false;
+        }
+
+        // معالجة تقديم النموذج
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const offerId = document.getElementById('offerId').value;
+            const formData = {
+                id: offerId ? parseInt(offerId) : generateId(),
+                title: document.getElementById('offerTitle').value.trim(),
+                category: document.getElementById('offerCategory').value,
+                description: document.getElementById('offerDescription').value.trim(),
+                price: parseFloat(document.getElementById('offerPrice').value) || 0,
+                discount: parseFloat(document.getElementById('offerDiscount').value) || 0,
+                startDate: document.getElementById('offerStartDate').value,
+                endDate: document.getElementById('offerEndDate').value,
+                status: document.getElementById('offerStatus').value,
+                featured: document.getElementById('offerFeatured').value,
+                image: document.getElementById('offerImage').value.trim() || getDefaultImage(offerId),
+                createdAt: offerId ? offers.find(o => o.id === parseInt(offerId)).createdAt : new Date().toISOString().split('T')[0],
+                views: offerId ? offers.find(o => o.id === parseInt(offerId)).views : 0
+            };
+            
+            // التحقق من صحة البيانات
+            if (!formData.title || !formData.category || !formData.description) {
+                alert('الرجاء ملء جميع الحقول المطلوبة');
+                return;
+            }
+            
+            if (new Date(formData.endDate) < new Date(formData.startDate)) {
+                alert('تاريخ الانتهاء يجب أن يكون بعد تاريخ البدء');
+                return;
+            }
+            
+            if (editMode) {
+                // تحديث الإعلان
+                updateOffer(formData);
+                showNotification('تم تحديث الإعلان بنجاح', 'success');
+            } else {
+                // إضافة إعلان جديد
+                addOffer(formData);
+                showNotification('تم إضافة الإعلان بنجاح', 'success');
+            }
+            
+            hideAddForm();
+            loadOffers();
+        }
+
+        // توليد معرف جديد
+        function generateId() {
+            const maxId = offers.length > 0 ? Math.max(...offers.map(o => o.id)) : 0;
+            return maxId + 1;
+        }
+
+        // الحصول على صورة افتراضية
+        function getDefaultImage(id) {
+            const images = [
+                'https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80',
+                'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'
+            ];
+            return images[id % images.length];
+        }
+
+        // إضافة إعلان جديد
+        function addOffer(offer) {
+            offers.unshift(offer);
+            saveOffers();
+        }
+
+        // تحديث إعلان
+        function updateOffer(updatedOffer) {
+            const index = offers.findIndex(o => o.id === updatedOffer.id);
+            if (index !== -1) {
+                offers[index] = updatedOffer;
+                saveOffers();
+            }
+        }
+
+        // حذف إعلان
+        function deleteOffer(id) {
+            offers = offers.filter(offer => offer.id !== id);
+            saveOffers();
+        }
+
+        // حفظ الإعلانات في localStorage
+        function saveOffers() {
+            localStorage.setItem('offers', JSON.stringify(offers));
+        }
+
+        // تحميل وعرض الإعلانات
+        function loadOffers(filteredOffers = null) {
+            const offersToShow = filteredOffers || offers;
+            const offersGrid = document.getElementById('offersGrid');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const noDataMessage = document.getElementById('noDataMessage');
+            const pagination = document.getElementById('pagination');
+            
+            // عرض مؤشر التحميل
+            offersGrid.innerHTML = '';
+            loadingIndicator.style.display = 'block';
+            noDataMessage.style.display = 'none';
+            pagination.style.display = 'none';
+            
+            // محاكاة التأخير في التحميل
+            setTimeout(() => {
+                loadingIndicator.style.display = 'none';
+                
+                if (offersToShow.length === 0) {
+                    noDataMessage.style.display = 'block';
+                    return;
+                }
+                
+                // حساب Pagination
+                const totalPages = Math.ceil(offersToShow.length / itemsPerPage);
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const paginatedOffers = offersToShow.slice(startIndex, endIndex);
+                
+                // عرض الإعلانات
+                offersGrid.innerHTML = paginatedOffers.map(offer => createOfferCard(offer)).join('');
+                
+                // عرض Pagination إذا كان هناك أكثر من صفحة
+                if (totalPages > 1) {
+                    renderPagination(totalPages);
+                    pagination.style.display = 'flex';
+                }
+                
+                // إضافة مستمعي الأحداث للأزرار
+                addEventListenersToCards();
+            }, 500);
+        }
+
+        // إنشاء بطاقة عرض الإعلان
+        function createOfferCard(offer) {
+            const priceAfterDiscount = offer.price - (offer.price * (offer.discount / 100));
+            const isActive = offer.status === 'active';
+            const isFeatured = offer.featured === 'yes';
+            const isExpired = new Date(offer.endDate) < new Date();
+            
+            return `
+                <div class="offer-card" data-id="${offer.id}">
+                    ${isFeatured ? '<span class="offer-badge badge-featured">مميز</span>' : ''}
+                    ${isExpired ? '<span class="offer-badge badge-inactive">منتهي</span>' : 
+                      isActive ? '<span class="offer-badge badge-active">نشط</span>' : 
+                      '<span class="offer-badge badge-inactive">غير نشط</span>'}
+                    
+                    <img src="${offer.image}" alt="${offer.title}" class="offer-image" onerror="this.src='https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80'">
+                    
+                    <div class="offer-content">
+                        <div class="offer-header">
+                            <div>
+                                <h3 class="offer-title">${offer.title}</h3>
+                                <span class="offer-category">${offer.category}</span>
+                            </div>
+                            <div>
+                                ${offer.price > 0 ? `
+                                    <div class="offer-price">
+                                        ${offer.discount > 0 ? `
+                                            <span style="text-decoration: line-through; color: var(--text-light); font-size: 16px; margin-left: 5px;">
+                                                ${offer.price.toLocaleString()} ر.س
+                                            </span>
+                                            <br>
+                                            <span style="color: var(--success);">
+                                                ${priceAfterDiscount.toLocaleString()} ر.س
+                                            </span>
+                                        ` : `
+                                            <span>${offer.price.toLocaleString()} ر.س</span>
+                                        `}
+                                    </div>
+                                    ${offer.discount > 0 ? `
+                                        <small style="color: var(--success); display: block; text-align: left;">
+                                            خصم ${offer.discount}%
+                                        </small>
+                                    ` : ''}
+                                ` : '<div class="offer-price" style="color: var(--info);">مجاناً</div>'}
+                            </div>
+                        </div>
+                        
+                        <p class="offer-desc">${offer.description}</p>
+                        
+                        <div class="offer-meta">
+                            <span><i class="far fa-calendar"></i> ${formatDate(offer.startDate)} - ${formatDate(offer.endDate)}</span>
+                            <span><i class="far fa-eye"></i> ${offer.views}</span>
+                        </div>
+                        
+                        <div class="offer-actions">
+                            <button class="action-btn edit-btn" data-id="${offer.id}">
+                                <i class="fas fa-edit"></i> تعديل
+                            </button>
+                            <button class="action-btn delete-btn" data-id="${offer.id}">
+                                <i class="fas fa-trash"></i> حذف
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // تنسيق التاريخ
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ar-SA');
+        }
+
+        // إضافة مستمعي الأحداث لبطاقات الإعلانات
+        function addEventListenersToCards() {
+            // أزرار التعديل
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    const offer = offers.find(o => o.id === id);
+                    if (offer) {
+                        showAddForm(offer);
+                    }
+                });
+            });
+            
+            // أزرار الحذف
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    showDeleteModal(id);
+                });
+            });
+        }
+
+        // عرض Modal الحذف
+        function showDeleteModal(id) {
+            deleteOfferId = id;
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        // إخفاء Modal الحذف
+        function hideDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+            deleteOfferId = null;
+        }
+
+        // تأكيد الحذف
+        function confirmDelete() {
+            if (deleteOfferId) {
+                deleteOffer(deleteOfferId);
+                showNotification('تم حذف الإعلان بنجاح', 'success');
+                loadOffers();
+                hideDeleteModal();
+            }
+        }
+
+        // فلترة الإعلانات
+        function filterOffers() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const sortBy = document.getElementById('sortFilter').value;
+            
+            let filtered = [...offers];
+            
+            // تطبيق البحث
+            if (searchTerm) {
+                filtered = filtered.filter(offer => 
+                    offer.title.toLowerCase().includes(searchTerm) ||
+                    offer.description.toLowerCase().includes(searchTerm) ||
+                    offer.category.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // تطبيق فلترة التصنيف
+            if (category) {
+                filtered = filtered.filter(offer => offer.category === category);
+            }
+            
+            // تطبيق فلترة الحالة
+            if (status) {
+                filtered = filtered.filter(offer => offer.status === status);
+            }
+            
+            // تطبيق الترتيب
+            filtered.sort((a, b) => {
+                switch (sortBy) {
+                    case 'newest':
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    case 'oldest':
+                        return new Date(a.createdAt) - new Date(b.createdAt);
+                    case 'price-high':
+                        return b.price - a.price;
+                    case 'price-low':
+                        return a.price - b.price;
+                    case 'name':
+                        return a.title.localeCompare(b.title, 'ar');
+                    default:
+                        return 0;
+                }
+            });
+            
+            currentPage = 1;
+            loadOffers(filtered);
+        }
+
+        // إعادة تعيين الفلاتر
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('sortFilter').value = 'newest';
+            
+            currentPage = 1;
+            loadOffers();
+        }
+
+        // عرض Pagination
+        function renderPagination(totalPages) {
+            const pagination = document.getElementById('pagination');
+            let html = '';
+            
+            // زر الصفحة السابقة
+            html += `
+                <button class="pagination-btn" id="prevPage" ${currentPage === 1 ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            `;
+            
+            // أرقام الصفحات
+            for (let i = 1; i <= totalPages; i++) {
+                html += `
+                    <button class="pagination-btn ${i === currentPage ? 'active' : ''}" data-page="${i}">
+                        ${i}
+                    </button>
+                `;
+            }
+            
+            // زر الصفحة التالية
+            html += `
+                <button class="pagination-btn" id="nextPage" ${currentPage === totalPages ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            `;
+            
+            pagination.innerHTML = html;
+            
+            // إضافة مستمعي الأحداث
+            document.getElementById('prevPage').addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    loadOffers();
+                }
+            });
+            
+            document.getElementById('nextPage').addEventListener('click', () => {
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    loadOffers();
+                }
+            });
+            
+            document.querySelectorAll('.pagination-btn[data-page]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    currentPage = parseInt(this.getAttribute('data-page'));
+                    loadOffers();
+                });
+            });
+        }
+
+        // عرض إشعار
+        function showNotification(message, type) {
+            // يمكنك استبدال هذا بتنفيذ أكثر تطوراً
+            alert(message);
+        }
+    </script>
+</body>
+</html>

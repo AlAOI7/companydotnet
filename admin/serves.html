@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دوت نت - إدارة الخدمات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="effects.css">
+    <style>
+        :root {
+            --primary: #c00a27;
+            --primary-dark: #8a001a;
+            --primary-light: #ff4d6d;
+            --secondary: #000000;
+            --secondary-light: #1a1a1a;
+            --sidebar: #0c0c0c;
+            --content-bg: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --text: #ffffff;
+            --text-light: #b0b0b0;
+            --success: #28a745;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --danger: #dc3545;
+            --radius: 12px;
+            --shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--content-bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+        
+        /* ========== الشريط الجانبي ========== */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar);
+            height: 100vh;
+            position: fixed;
+            right: 0;
+            top: 0;
+            border-left: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px 0;
+            transition: var(--transition);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 30px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-logo img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            animation: logoFloat 6s ease-in-out infinite;
+        }
+        
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+        
+        .sidebar-logo span {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--primary), var(--primary-light), #00ffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0 15px;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: var(--radius);
+            transition: var(--transition);
+            gap: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-menu a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: var(--transition);
+        }
+        
+        .sidebar-menu a:hover::before {
+            right: 100%;
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: white;
+            transform: translateX(-5px);
+        }
+        
+        .sidebar-menu a.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(192, 10, 39, 0.3);
+            animation: pulseGlow 2s infinite;
+        }
+        
+        .sidebar-menu i {
+            font-size: 20px;
+            width: 24px;
+            text-align: center;
+            transition: var(--transition);
+        }
+        
+        .sidebar-menu a:hover i {
+            transform: scale(1.2);
+        }
+        
+        /* ========== المحتوى الرئيسي ========== */
+        .main-content {
+            flex: 1;
+            margin-right: 260px;
+            padding: 20px;
+            transition: var(--transition);
+        }
+        
+        /* ========== شريط التنقل العلوي ========== */
+        .top-navbar {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 15px 25px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: slideDown 0.5s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 24px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .menu-toggle:hover {
+            color: var(--primary);
+            transform: rotate(90deg);
+        }
+        
+        .page-title h1 {
+            font-size: 28px;
+            color: white;
+            background: linear-gradient(45deg, var(--primary), var(--primary-light));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .page-title p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        /* ========== زر الإضافة ========== */
+        .add-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            padding: 12px 25px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .add-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition);
+        }
+        
+        .add-btn:hover::before {
+            right: 100%;
+        }
+        
+        .add-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(192, 10, 39, 0.3);
+        }
+        
+        /* ========== وحدة إضافة/تعديل خدمة ========== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .service-modal {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 30px;
+            width: 90%;
+            max-width: 800px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .service-modal::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to left, var(--primary), var(--primary-light));
+            animation: modalGlow 3s linear infinite;
+        }
+        
+        @keyframes modalGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal-title {
+            font-size: 22px;
+            color: white;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 24px;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-close:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--danger);
+            transform: rotate(90deg);
+        }
+        
+        /* ========== نموذج الخدمة ========== */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-light);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-label i {
+            color: var(--primary);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius);
+            color: white;
+            font-size: 16px;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(192, 10, 39, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+        
+        .features-container {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            padding: 15px;
+            margin-top: 10px;
+        }
+        
+        .feature-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+        
+        .feature-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: var(--radius);
+            margin-bottom: 8px;
+            transition: var(--transition);
+        }
+        
+        .feature-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(-5px);
+        }
+        
+        .remove-feature {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+        
+        .remove-feature:hover {
+            background-color: rgba(220, 53, 69, 0.2);
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border-radius: var(--radius);
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition);
+        }
+        
+        .btn:hover::before {
+            right: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(192, 10, 39, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* ========== فلترة وترتيب ========== */
+        .filter-container {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+        
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .filter-title {
+            font-size: 18px;
+            color: white;
+        }
+        
+        .reset-filters {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 14px;
+            transition: var(--transition);
+            padding: 5px 10px;
+            border-radius: var(--radius);
+        }
+        
+        .reset-filters:hover {
+            background-color: rgba(192, 10, 39, 0.1);
+        }
+        
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        /* ========== شبكة عرض الخدمات ========== */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            animation: fadeInUp 0.6s ease-out 0.4s both;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .service-card {
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: var(--transition);
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3),
+                        0 0 30px rgba(192, 10, 39, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to left, var(--primary), var(--primary-light));
+        }
+        
+        .service-header {
+            padding: 25px 25px 15px;
+            position: relative;
+        }
+        
+        .service-icon-container {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, rgba(192, 10, 39, 0.2) 0%, rgba(0, 0, 0, 0.2) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: var(--primary);
+            position: relative;
+            animation: iconPulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .service-title {
+            font-size: 22px;
+            color: white;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+        
+        .service-category {
+            color: var(--primary);
+            font-size: 14px;
+            background-color: rgba(192, 10, 39, 0.1);
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        
+        .service-content {
+            padding: 0 25px 20px;
+        }
+        
+        .service-description {
+            color: var(--text-light);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            min-height: 60px;
+        }
+        
+        .service-features {
+            margin-bottom: 20px;
+        }
+        
+        .feature-tag {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-left: 8px;
+            margin-bottom: 8px;
+            transition: var(--transition);
+        }
+        
+        .feature-tag:hover {
+            background-color: rgba(192, 10, 39, 0.2);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .service-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            background-color: rgba(255, 255, 255, 0.03);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .service-price {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .duration {
+            color: var(--text-light);
+            font-size: 12px;
+        }
+        
+        .service-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: var(--transition);
+        }
+        
+        .action-btn:hover::before {
+            right: 100%;
+        }
+        
+        .btn-edit {
+            background-color: rgba(23, 162, 184, 0.2);
+            color: var(--info);
+            border: 1px solid rgba(23, 162, 184, 0.3);
+        }
+        
+        .btn-edit:hover {
+            background-color: var(--info);
+            color: white;
+            transform: rotate(15deg);
+        }
+        
+        .btn-delete {
+            background-color: rgba(220, 53, 69, 0.2);
+            color: var(--danger);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+        }
+        
+        .btn-delete:hover {
+            background-color: var(--danger);
+            color: white;
+            transform: rotate(-15deg);
+        }
+        
+        .featured-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(135deg, var(--warning) 0%, #ff9900 100%);
+            color: black;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 1;
+            animation: badgeFloat 3s ease-in-out infinite;
+        }
+        
+        @keyframes badgeFloat {
+            0%, 100% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-5px) rotate(5deg); }
+        }
+        
+        .status-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .status-active {
+            background-color: rgba(40, 167, 69, 0.2);
+            color: var(--success);
+        }
+        
+        .status-inactive {
+            background-color: rgba(108, 117, 125, 0.2);
+            color: #6c757d;
+        }
+        
+        /* ========== رسائل التحميل ========== */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-light);
+            grid-column: 1 / -1;
+        }
+        
+        .loading i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--primary);
+            animation: spin 2s linear infinite;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-light);
+            grid-column: 1 / -1;
+        }
+        
+        .no-data i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            color: var(--text-light);
+            opacity: 0.5;
+        }
+        
+        /* ========== Modal تأكيد الحذف ========== */
+        .delete-modal .modal-body {
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .delete-modal .modal-body i {
+            font-size: 64px;
+            color: var(--danger);
+            margin-bottom: 20px;
+            animation: vibrate 0.5s ease-in-out;
+        }
+        
+        @keyframes vibrate {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        /* ========== التأثيرات ثلاثية الأبعاد ========== */
+        .hover-3d {
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .hover-3d:hover {
+            transform: translateZ(20px) rotateX(5deg) rotateY(5deg);
+        }
+        
+        .float-3d {
+            animation: float3D 6s ease-in-out infinite;
+        }
+        
+        @keyframes float3D {
+            0%, 100% {
+                transform: translateY(0) rotateX(0) rotateY(0);
+            }
+            33% {
+                transform: translateY(-20px) rotateX(5deg) rotateY(5deg);
+            }
+            66% {
+                transform: translateY(-10px) rotateX(-5deg) rotateY(-5deg);
+            }
+        }
+        
+        /* ========== التجاوب مع الشاشات ========== */
+        @media (max-width: 1200px) {
+            .services-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(100%);
+                width: 280px;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-right: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .overlay {
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.7);
+                z-index: 999;
+                display: none;
+            }
+            
+            .overlay.active {
+                display: block;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .service-footer {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .service-actions {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 15px;
+            }
+            
+            .top-navbar {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .add-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .service-modal {
+                padding: 20px;
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- الفقاعات المتحركة -->
+    <div class="bubbles-container" id="bubblesContainer"></div>
+    
+    <!-- الجسيمات المتحركة -->
+    <div class="particles-container" id="particlesContainer"></div>
+    
+    <!-- الشريط الجانبي -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo">
+                <img src="1.jpg" alt="دوت نت" class="float-3d">
+                <span>دوت نت</span>
+            </div>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.html">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>لوحة التحكم</span>
+            </a></li>
+            
+            <li><a href="offers.html">
+                <i class="fas fa-bullhorn"></i>
+                <span>الإعلانات</span>
+            </a></li>
+            
+            <li><a href="serves.html" class="active">
+                <i class="fas fa-concierge-bell"></i>
+                <span>الخدمات</span>
+            </a></li>
+            
+            <li><a href="blog.html">
+                <i class="fas fa-blog"></i>
+                <span>المدونة</span>
+            </a></li>
+            
+            <li><a href="about.html">
+                <i class="fas fa-info-circle"></i>
+                <span>من نحن</span>
+            </a></li>
+            
+            <li><a href="erp.html">
+                <i class="fas fa-cogs"></i>
+                <span>نظام ERP</span>
+            </a></li>
+            
+            <li><a href="Service-request.html">
+                <i class="fas fa-headset"></i>
+                <span>طلب خدمة</span>
+            </a></li>
+            
+            <li><a href="contact.html">
+                <i class="fas fa-envelope"></i>
+                <span>اتصل بنا</span>
+            </a></li>
+            
+            <li><a href="#" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>تسجيل الخروج</span>
+            </a></li>
+        </ul>
+    </div>
+    
+    <!-- طبقة التعتيم للشريط الجانبي على الجوال -->
+    <div class="overlay" id="overlay"></div>
+    
+    <!-- المحتوى الرئيسي -->
+    <div class="main-content" id="mainContent">
+        <!-- شريط التنقل العلوي -->
+        <nav class="top-navbar">
+            <div class="nav-left">
+                <button class="menu-toggle hover-3d" id="menuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="page-title">
+                    <h1>إدارة الخدمات</h1>
+                    <p>إضافة وعرض وتعديل الخدمات المقدمة</p>
+                </div>
+            </div>
+            
+            <button class="add-btn" id="addServiceBtn">
+                <i class="fas fa-plus"></i>
+                <span>إضافة خدمة جديدة</span>
+            </button>
+        </nav>
+        
+        <!-- فلترة وترتيب -->
+        <div class="filter-container">
+            <div class="filter-header">
+                <h3 class="filter-title">فلترة وترتيب الخدمات</h3>
+                <button class="reset-filters" id="resetFiltersBtn">إعادة تعيين</button>
+            </div>
+            
+            <div class="filter-grid">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="searchInput" placeholder="🔍 ابحث في الخدمات...">
+                </div>
+                
+                <div class="form-group">
+                    <select class="form-control" id="categoryFilter">
+                        <option value="">جميع التصنيفات</option>
+                        <option value="تطوير">تطوير</option>
+                        <option value="تصميم">تصميم</option>
+                        <option value="تسويق">تسويق</option>
+                        <option value="استشارات">استشارات</option>
+                        <option value="تدريب">تدريب</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <select class="form-control" id="statusFilter">
+                        <option value="">جميع الحالات</option>
+                        <option value="active">نشط</option>
+                        <option value="inactive">غير نشط</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <select class="form-control" id="sortFilter">
+                        <option value="newest">الأحدث أولاً</option>
+                        <option value="oldest">الأقدم أولاً</option>
+                        <option value="price-high">السعر (مرتفع إلى منخفض)</option>
+                        <option value="price-low">السعر (منخفض إلى مرتفع)</option>
+                        <option value="name">حسب الاسم</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- عرض الخدمات -->
+        <div id="servicesContainer">
+            <div class="loading" id="loadingIndicator">
+                <i class="fas fa-spinner"></i>
+                <p>جاري تحميل الخدمات...</p>
+            </div>
+            
+            <div class="services-grid" id="servicesGrid"></div>
+            
+            <div class="no-data" id="noDataMessage" style="display: none;">
+                <i class="fas fa-concierge-bell"></i>
+                <h3>لا توجد خدمات</h3>
+                <p>ابدأ بإضافة أول خدمة لك</p>
+                <button class="btn btn-primary" id="addFirstServiceBtn" style="margin-top: 20px;">
+                    <i class="fas fa-plus"></i> إضافة خدمة جديدة
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal إضافة/تعديل خدمة -->
+    <div class="modal-overlay" id="serviceModal">
+        <div class="service-modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">إضافة خدمة جديدة</h3>
+                <button class="modal-close" id="closeModalBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="serviceForm">
+                <input type="hidden" id="serviceId" value="">
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="serviceTitle" class="form-label">
+                            <i class="fas fa-heading"></i> عنوان الخدمة
+                        </label>
+                        <input type="text" id="serviceTitle" class="form-control" placeholder="أدخل عنوان الخدمة" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="serviceCategory" class="form-label">
+                            <i class="fas fa-tag"></i> التصنيف
+                        </label>
+                        <select id="serviceCategory" class="form-control" required>
+                            <option value="">اختر التصنيف</option>
+                            <option value="تطوير">تطوير</option>
+                            <option value="تصميم">تصميم</option>
+                            <option value="تسويق">تسويق</option>
+                            <option value="استشارات">استشارات</option>
+                            <option value="تدريب">تدريب</option>
+                            <option value="دعم">دعم فني</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="serviceIcon" class="form-label">
+                            <i class="fas fa-icons"></i> الأيقونة
+                        </label>
+                        <select id="serviceIcon" class="form-control" required>
+                            <option value="fas fa-laptop-code">💻 تطوير المواقع</option>
+                            <option value="fas fa-mobile-alt">📱 تطبيقات الجوال</option>
+                            <option value="fas fa-shopping-cart">🛒 تجارة إلكترونية</option>
+                            <option value="fas fa-chart-line">📈 تسويق رقمي</option>
+                            <option value="fas fa-cloud">☁️ حلول سحابية</option>
+                            <option value="fas fa-cogs">⚙️ أنظمة ERP</option>
+                            <option value="fas fa-palette">🎨 تصميم جرافيك</option>
+                            <option value="fas fa-search">🔍 تحسين محركات البحث</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="servicePrice" class="form-label">
+                            <i class="fas fa-dollar-sign"></i> السعر (ر.س)
+                        </label>
+                        <input type="number" id="servicePrice" class="form-control" placeholder="أدخل السعر" min="0" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="serviceDuration" class="form-label">
+                            <i class="fas fa-clock"></i> المدة الزمنية
+                        </label>
+                        <input type="text" id="serviceDuration" class="form-control" placeholder="مثال: 2-4 أسابيع" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="serviceStatus" class="form-label">
+                            <i class="fas fa-toggle-on"></i> الحالة
+                        </label>
+                        <select id="serviceStatus" class="form-control" required>
+                            <option value="active">نشط</option>
+                            <option value="inactive">غير نشط</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-star"></i> مميز
+                        </label>
+                        <select id="serviceFeatured" class="form-control">
+                            <option value="no">لا</option>
+                            <option value="yes">نعم</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="serviceDescription" class="form-label">
+                            <i class="fas fa-align-left"></i> وصف الخدمة
+                        </label>
+                        <textarea id="serviceDescription" class="form-control" placeholder="أدخل وصفاً مفصلاً للخدمة..." required rows="4"></textarea>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label class="form-label">
+                            <i class="fas fa-check-circle"></i> المميزات
+                        </label>
+                        <div class="features-container">
+                            <div class="feature-input-group">
+                                <input type="text" id="featureInput" class="form-control" placeholder="أضف ميزة جديدة...">
+                                <button type="button" class="btn btn-primary" id="addFeatureBtn">
+                                    <i class="fas fa-plus"></i> إضافة
+                                </button>
+                            </div>
+                            <ul class="feature-list" id="featureList"></ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">
+                        <i class="fas fa-times"></i> إلغاء
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> حفظ الخدمة
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal تأكيد الحذف -->
+    <div class="modal-overlay delete-modal" id="deleteModal">
+        <div class="service-modal">
+            <div class="modal-header">
+                <h3 class="modal-title">تأكيد الحذف</h3>
+                <button class="modal-close" id="closeDeleteModalBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <i class="fas fa-trash-alt"></i>
+                <h4 style="margin-bottom: 10px;">هل أنت متأكد من حذف هذه الخدمة؟</h4>
+                <p style="color: var(--text-light);">لا يمكن التراجع عن هذا الإجراء بعد التنفيذ.</p>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-secondary" id="cancelDeleteBtn">
+                    <i class="fas fa-times"></i> إلغاء
+                </button>
+                <button class="btn btn-danger" id="confirmDeleteBtn">
+                    <i class="fas fa-trash"></i> حذف الخدمة
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // بيانات الخدمات الافتراضية
+        const sampleServices = [
+            {
+                id: 1,
+                title: "تطوير المواقع الإلكترونية",
+                description: "تصميم وتطوير مواقع ويب احترافية ومتجاوبة مع أحدث التقنيات، نضمن لك موقعاً سريعاً وآمناً ومتوافقاً مع محركات البحث.",
+                icon: "fas fa-laptop-code",
+                price: 2999,
+                duration: "2-4 أسابيع",
+                category: "تطوير",
+                status: "active",
+                features: ["تصميم متجاوب", "تحسين SEO", "دعم فني لمدة سنة", "شهادة SSL مجانية", "استضافة مجانية 3 أشهر"],
+                featured: true,
+                createdAt: "2023-11-15"
+            },
+            {
+                id: 2,
+                title: "تطبيقات الجوال",
+                description: "تطوير تطبيقات جوال لأنظمة iOS و Android باستخدام أحدث التقنيات، مع ضمان تجربة مستخدم ممتازة وأداء عالي.",
+                icon: "fas fa-mobile-alt",
+                price: 4999,
+                duration: "4-8 أسابيع",
+                category: "تطوير",
+                status: "active",
+                features: ["تطبيقات أصلية", "واجهة مستخدم فريدة", "اختبارات شاملة", "نشر على المتاجر", "دعم فني 6 أشهر"],
+                featured: true,
+                createdAt: "2023-11-20"
+            },
+            {
+                id: 3,
+                title: "التسويق الرقمي",
+                description: "حزمة متكاملة للتسويق الرقمي تشمل إدارة وسائل التواصل الاجتماعي وتحسين محركات البحث وتصميم الحملات الإعلانية.",
+                icon: "fas fa-chart-line",
+                price: 1999,
+                duration: "شهري",
+                category: "تسويق",
+                status: "active",
+                features: ["إدارة السوشيال ميديا", "تحسين SEO", "حملات إعلانية", "تحليلات أداء", "تقارير شهرية"],
+                featured: false,
+                createdAt: "2023-11-25"
+            },
+            {
+                id: 4,
+                title: "تصميم الشعارات والهوية البصرية",
+                description: "تصميم شعار احترافي وهوية بصرية متكاملة تعكس هوية علامتك التجارية وتجذب عملائك المستهدفين.",
+                icon: "fas fa-palette",
+                price: 1499,
+                duration: "1-2 أسابيع",
+                category: "تصميم",
+                status: "active",
+                features: ["3 تصميمات مقترحة", "دليل الاستخدام", "ملفات متعددة الجودة", "حقوق الملكية", "مراجعات غير محدودة"],
+                featured: false,
+                createdAt: "2023-11-28"
+            },
+            {
+                id: 5,
+                title: "استشارات تقنية",
+                description: "استشارات تقنية متخصصة تساعدك على اتخاذ القرارات الصحيحة وتطوير استراتيجيتك الرقمية.",
+                icon: "fas fa-search",
+                price: 999,
+                duration: "جلسة واحدة",
+                category: "استشارات",
+                status: "inactive",
+                features: ["تحليل الوضع الحالي", "توصيات مخصصة", "خطة عمل تفصيلية", "متابعة لمدة شهر", "تقرير مفصل"],
+                featured: false,
+                createdAt: "2023-10-15"
+            }
+        ];
+
+        // متغيرات النظام
+        let services = JSON.parse(localStorage.getItem('services')) || sampleServices;
+        let currentServiceId = null;
+        let deleteServiceId = null;
+        let features = [];
+
+        // تهيئة النظام
+        document.addEventListener('DOMContentLoaded', function() {
+            // التحقق من تسجيل الدخول
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn !== 'true') {
+                window.location.href = 'login.html';
+            }
+            
+            initServicesSystem();
+            loadServices();
+            setupEventListeners();
+            createParticles();
+            createBubbles();
+        });
+
+        // تهيئة نظام الخدمات
+        function initServicesSystem() {
+            if (!localStorage.getItem('services')) {
+                localStorage.setItem('services', JSON.stringify(sampleServices));
+                services = sampleServices;
+            }
+        }
+
+        // إعداد مستمعي الأحداث
+        function setupEventListeners() {
+            // إدارة الشريط الجانبي
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            
+            menuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            });
+            
+            overlay.addEventListener('click', function() {
+                sidebar.classList.remove('active');
+                overlay.classList.remove('active');
+            });
+            
+            // زر إضافة خدمة
+            document.getElementById('addServiceBtn').addEventListener('click', () => showServiceModal());
+            document.getElementById('addFirstServiceBtn').addEventListener('click', () => showServiceModal());
+            
+            // إغلاق النماذج
+            document.getElementById('closeModalBtn').addEventListener('click', hideServiceModal);
+            document.getElementById('cancelBtn').addEventListener('click', hideServiceModal);
+            document.getElementById('closeDeleteModalBtn').addEventListener('click', hideDeleteModal);
+            document.getElementById('cancelDeleteBtn').addEventListener('click', hideDeleteModal);
+            
+            // إضافة ميزة
+            document.getElementById('addFeatureBtn').addEventListener('click', addFeature);
+            document.getElementById('featureInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addFeature();
+                }
+            });
+            
+            // تقديم النموذج
+            document.getElementById('serviceForm').addEventListener('submit', handleFormSubmit);
+            
+            // تأكيد الحذف
+            document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
+            
+            // إعادة تعيين الفلاتر
+            document.getElementById('resetFiltersBtn').addEventListener('click', resetFilters);
+            
+            // الفلاتر والبحث
+            document.getElementById('searchInput').addEventListener('input', filterServices);
+            document.getElementById('categoryFilter').addEventListener('change', filterServices);
+            document.getElementById('statusFilter').addEventListener('change', filterServices);
+            document.getElementById('sortFilter').addEventListener('change', filterServices);
+            
+            // تسجيل الخروج
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('هل تريد تسجيل الخروج؟')) {
+                    localStorage.removeItem('isLoggedIn');
+                    window.location.href = 'login.html';
+                }
+            });
+            
+            // إغلاق النماذج بالنقر خارجها
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('modal-overlay')) {
+                    if (e.target.id === 'serviceModal') hideServiceModal();
+                    if (e.target.id === 'deleteModal') hideDeleteModal();
+                }
+            });
+        }
+
+        // إنشاء الجسيمات
+        function createParticles() {
+            const container = document.getElementById('particlesContainer');
+            if (!container) return;
+            
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 10 + 5;
+                const xOffset = Math.random() * 200 - 100;
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 20;
+                
+                particle.style.cssText = `
+                    --size: ${size};
+                    --x-offset: ${xOffset}px;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${Math.random() * 100}%;
+                    animation-duration: ${duration}s;
+                    animation-delay: ${delay}s;
+                `;
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // إنشاء الفقاعات
+        function createBubbles() {
+            const container = document.getElementById('bubblesContainer');
+            if (!container) return;
+            
+            const bubbleCount = 15;
+            
+            for (let i = 0; i < bubbleCount; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                
+                const size = Math.random() * 80 + 30;
+                const xEnd = Math.random() * 200 - 100;
+                const duration = Math.random() * 20 + 15;
+                const delay = Math.random() * 15;
+                
+                bubble.style.cssText = `
+                    --bubble-x-end: ${xEnd}px;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${Math.random() * 100}%;
+                    animation-duration: ${duration}s;
+                    animation-delay: ${delay}s;
+                    opacity: ${Math.random() * 0.3 + 0.1};
+                `;
+                
+                container.appendChild(bubble);
+            }
+        }
+
+        // تحميل وعرض الخدمات
+        function loadServices(filteredServices = null) {
+            const servicesToShow = filteredServices || services;
+            const servicesGrid = document.getElementById('servicesGrid');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const noDataMessage = document.getElementById('noDataMessage');
+            
+            // عرض مؤشر التحميل
+            servicesGrid.innerHTML = '';
+            loadingIndicator.style.display = 'block';
+            noDataMessage.style.display = 'none';
+            
+            // محاكاة التأخير في التحميل
+            setTimeout(() => {
+                loadingIndicator.style.display = 'none';
+                
+                if (servicesToShow.length === 0) {
+                    noDataMessage.style.display = 'block';
+                    return;
+                }
+                
+                // عرض الخدمات
+                servicesGrid.innerHTML = servicesToShow.map(service => createServiceCard(service)).join('');
+                
+                // إضافة مستمعي الأحداث للأزرار
+                addEventListenersToCards();
+            }, 600);
+        }
+
+        // إنشاء بطاقة عرض الخدمة
+        function createServiceCard(service) {
+            return `
+                <div class="service-card hover-3d" data-id="${service.id}">
+                    ${service.featured ? '<span class="featured-badge">مميز</span>' : ''}
+                    <span class="status-badge status-${service.status}">
+                        ${service.status === 'active' ? 'نشط' : 'غير نشط'}
+                    </span>
+                    
+                    <div class="service-header">
+                        <div class="service-icon-container">
+                            <i class="${service.icon}"></i>
+                        </div>
+                        <h3 class="service-title">${service.title}</h3>
+                        <span class="service-category">${service.category}</span>
+                    </div>
+                    
+                    <div class="service-content">
+                        <p class="service-description">${service.description}</p>
+                        
+                        <div class="service-features">
+                            ${service.features.slice(0, 3).map(feature => 
+                                `<span class="feature-tag">${feature}</span>`
+                            ).join('')}
+                            ${service.features.length > 3 ? 
+                                `<span class="feature-tag">+${service.features.length - 3} أكثر</span>` : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="service-footer">
+                        <div class="service-price">
+                            <span class="price">${service.price.toLocaleString()} ر.س</span>
+                            <span class="duration">${service.duration}</span>
+                        </div>
+                        
+                        <div class="service-actions">
+                            <button class="action-btn btn-edit" data-id="${service.id}">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn btn-delete" data-id="${service.id}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // إضافة مستمعي الأحداث لبطاقات الخدمات
+        function addEventListenersToCards() {
+            // أزرار التعديل
+            document.querySelectorAll('.btn-edit').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    const service = services.find(s => s.id === id);
+                    if (service) {
+                        showServiceModal(service);
+                    }
+                });
+            });
+            
+            // أزرار الحذف
+            document.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    showDeleteModal(id);
+                });
+            });
+        }
+
+        // عرض Modal الخدمة
+        function showServiceModal(service = null) {
+            const modal = document.getElementById('serviceModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const form = document.getElementById('serviceForm');
+            
+            if (service) {
+                // وضع التعديل
+                modalTitle.textContent = 'تعديل الخدمة';
+                currentServiceId = service.id;
+                fillFormWithServiceData(service);
+            } else {
+                // وضع الإضافة
+                modalTitle.textContent = 'إضافة خدمة جديدة';
+                currentServiceId = null;
+                form.reset();
+                features = [];
+                updateFeatureList();
+            }
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // ملء النموذج ببيانات الخدمة
+        function fillFormWithServiceData(service) {
+            document.getElementById('serviceId').value = service.id;
+            document.getElementById('serviceTitle').value = service.title;
+            document.getElementById('serviceCategory').value = service.category;
+            document.getElementById('serviceIcon').value = service.icon;
+            document.getElementById('servicePrice').value = service.price;
+            document.getElementById('serviceDuration').value = service.duration;
+            document.getElementById('serviceStatus').value = service.status;
+            document.getElementById('serviceFeatured').value = service.featured ? 'yes' : 'no';
+            document.getElementById('serviceDescription').value = service.description;
+            
+            features = [...service.features];
+            updateFeatureList();
+        }
+
+        // إخفاء Modal الخدمة
+        function hideServiceModal() {
+            document.getElementById('serviceModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            currentServiceId = null;
+        }
+
+        // إضافة ميزة جديدة
+        function addFeature() {
+            const input = document.getElementById('featureInput');
+            const feature = input.value.trim();
+            
+            if (feature) {
+                features.push(feature);
+                updateFeatureList();
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        // تحديث قائمة المميزات
+        function updateFeatureList() {
+            const featureList = document.getElementById('featureList');
+            featureList.innerHTML = '';
+            
+            features.forEach((feature, index) => {
+                const li = document.createElement('li');
+                li.className = 'feature-item';
+                li.innerHTML = `
+                    <span>${feature}</span>
+                    <button type="button" class="remove-feature" data-index="${index}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                featureList.appendChild(li);
+            });
+            
+            // إضافة مستمعي الأحداث لأزرار الحذف
+            document.querySelectorAll('.remove-feature').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    features.splice(index, 1);
+                    updateFeatureList();
+                });
+            });
+        }
+
+        // معالجة تقديم النموذج
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            
+            const formData = {
+                id: currentServiceId || generateId(),
+                title: document.getElementById('serviceTitle').value.trim(),
+                category: document.getElementById('serviceCategory').value,
+                icon: document.getElementById('serviceIcon').value,
+                price: parseFloat(document.getElementById('servicePrice').value) || 0,
+                duration: document.getElementById('serviceDuration').value.trim(),
+                status: document.getElementById('serviceStatus').value,
+                featured: document.getElementById('serviceFeatured').value === 'yes',
+                description: document.getElementById('serviceDescription').value.trim(),
+                features: [...features],
+                createdAt: currentServiceId ? 
+                    services.find(s => s.id === currentServiceId).createdAt : 
+                    new Date().toISOString().split('T')[0]
+            };
+            
+            // التحقق من صحة البيانات
+            if (!formData.title || !formData.category || !formData.description) {
+                alert('الرجاء ملء جميع الحقول المطلوبة');
+                return;
+            }
+            
+            if (formData.features.length === 0) {
+                if (!confirm('لم تقم بإضافة أي مميزات للخدمة. هل تريد الاستمرار؟')) {
+                    return;
+                }
+            }
+            
+            if (currentServiceId) {
+                // تحديث الخدمة
+                updateService(formData);
+                showNotification('تم تحديث الخدمة بنجاح', 'success');
+            } else {
+                // إضافة خدمة جديدة
+                addService(formData);
+                showNotification('تم إضافة الخدمة بنجاح', 'success');
+            }
+            
+            hideServiceModal();
+            loadServices();
+        }
+
+        // توليد معرف جديد
+        function generateId() {
+            const maxId = services.length > 0 ? Math.max(...services.map(s => s.id)) : 0;
+            return maxId + 1;
+        }
+
+        // إضافة خدمة جديدة
+        function addService(service) {
+            services.unshift(service);
+            saveServices();
+        }
+
+        // تحديث خدمة
+        function updateService(updatedService) {
+            const index = services.findIndex(s => s.id === updatedService.id);
+            if (index !== -1) {
+                services[index] = updatedService;
+                saveServices();
+            }
+        }
+
+        // حذف خدمة
+        function deleteService(id) {
+            services = services.filter(service => service.id !== id);
+            saveServices();
+        }
+
+        // حفظ الخدمات في localStorage
+        function saveServices() {
+            localStorage.setItem('services', JSON.stringify(services));
+        }
+
+        // عرض Modal الحذف
+        function showDeleteModal(id) {
+            deleteServiceId = id;
+            document.getElementById('deleteModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // إخفاء Modal الحذف
+        function hideDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            deleteServiceId = null;
+        }
+
+        // تأكيد الحذف
+        function confirmDelete() {
+            if (deleteServiceId) {
+                deleteService(deleteServiceId);
+                showNotification('تم حذف الخدمة بنجاح', 'success');
+                loadServices();
+                hideDeleteModal();
+            }
+        }
+
+        // فلترة الخدمات
+        function filterServices() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const sortBy = document.getElementById('sortFilter').value;
+            
+            let filtered = [...services];
+            
+            // تطبيق البحث
+            if (searchTerm) {
+                filtered = filtered.filter(service => 
+                    service.title.toLowerCase().includes(searchTerm) ||
+                    service.description.toLowerCase().includes(searchTerm) ||
+                    service.category.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // تطبيق فلترة التصنيف
+            if (category) {
+                filtered = filtered.filter(service => service.category === category);
+            }
+            
+            // تطبيق فلترة الحالة
+            if (status) {
+                filtered = filtered.filter(service => service.status === status);
+            }
+            
+            // تطبيق الترتيب
+            filtered.sort((a, b) => {
+                switch (sortBy) {
+                    case 'newest':
+                        return new Date(b.createdAt) - new Date(a.createdAt);
+                    case 'oldest':
+                        return new Date(a.createdAt) - new Date(b.createdAt);
+                    case 'price-high':
+                        return b.price - a.price;
+                    case 'price-low':
+                        return a.price - b.price;
+                    case 'name':
+                        return a.title.localeCompare(b.title, 'ar');
+                    default:
+                        return 0;
+                }
+            });
+            
+            loadServices(filtered);
+        }
+
+        // إعادة تعيين الفلاتر
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('categoryFilter').value = '';
+            document.getElementById('statusFilter').value = '';
+            document.getElementById('sortFilter').value = 'newest';
+            
+            loadServices();
+        }
+
+        // عرض إشعار
+        function showNotification(message, type) {
+            // إنشاء عنصر الإشعار
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
+                <button class="close-notification"><i class="fas fa-times"></i></button>
+            `;
+            
+            // إضافة الأنماط
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                background-color: ${type === 'success' ? 'rgba(40, 167, 69, 0.9)' : 'rgba(220, 53, 69, 0.9)'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: var(--radius);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                z-index: 3000;
+                animation: slideInLeft 0.3s ease-out;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            `;
+            
+            // إضافة إلى الصفحة
+            document.body.appendChild(notification);
+            
+            // إغلاق الإشعار
+            notification.querySelector('.close-notification').addEventListener('click', () => {
+                notification.style.animation = 'slideOutLeft 0.3s ease-out';
+                setTimeout(() => notification.remove(), 300);
+            });
+            
+            // إغلاق تلقائي بعد 5 ثواني
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOutLeft 0.3s ease-out';
+                    setTimeout(() => notification.remove(), 300);
+                }
+            }, 5000);
+            
+            // إضافة أنيميشن
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInLeft {
+                    from {
+                        transform: translateX(-100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+                
+                @keyframes slideOutLeft {
+                    from {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateX(-100%);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // تحميل الخدمات عند الفتح
+        loadServices();
+    </script>
+</body>
+</html> 
